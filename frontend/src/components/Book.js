@@ -4,8 +4,9 @@ export default class Book extends Component {
   render() {
     return (
       <div className="book">
-        <header>Book Title</header>
-        <p>Book Description</p>
+        <header>{this.props.data.title}</header>
+        <p>{this.props.data.description}</p>
+        <footer>{this.props.data.project_title}</footer>
       </div>
     );
   }

@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from . import models
@@ -24,3 +25,22 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Project
         fields = '__all__'
+
+
+class BookSerializer(serializers.ModelSerializer):
+    project_title = serializers.SerializerMethodField()
+    project_id = serializers.IntegerField(source='project.id')
+
+    class Meta:
+        model = models.Book
+        fields = (
+            'id',
+            'title',
+            'description',
+            'project_id',
+            'project_title'
+        )
+
+    def get_project_title(self, obj):
+        project = get_object_or_404(models.Project, pk=obj.project.id)
+        return project.title

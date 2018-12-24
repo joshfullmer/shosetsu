@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 export default class Toolbar extends Component {
   render() {
     return (
-      <footer class="toolbar">Toolbar</footer>
+      <footer className="toolbar">Toolbar</footer>
     );
   }
 }

@@ -6,7 +6,7 @@ export default class Nav extends Component {
     return (
       <nav>
         Navigation
-        <ul class="nav-list">
+        <ul className="nav-list">
           <li><NavLink to='/books'>Books</NavLink></li>
           <li>Chapters</li>
           <li>Outlines</li>

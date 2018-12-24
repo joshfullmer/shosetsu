@@ -46,6 +46,19 @@ footer.toolbar {
 }
 
 /* ====================================================== */
+/* Projects Layout */
+/* ====================================================== */
+
+.projects {
+  display: grid;
+  grid-gap: 10px;
+}
+
+.projects-container {
+  overflow: auto;
+}
+
+/* ====================================================== */
 /* Books Layout */
 /* ====================================================== */
 
@@ -73,6 +86,11 @@ footer.toolbar {
   }
 
   .books {
+    grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+    grid-auto-rows: minmax(250px, auto);
+  }
+
+  .projects {
     grid-template-columns: repeat(auto-fit, minmax(200px, auto));
     grid-auto-rows: minmax(250px, auto);
   }

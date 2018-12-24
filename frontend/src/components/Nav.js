@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 
 export default class Nav extends Component {
   render() {
@@ -6,7 +7,7 @@ export default class Nav extends Component {
       <nav>
         Navigation
         <ul class="nav-list">
-          <li>Books</li>
+          <li><NavLink to='/books'>Books</NavLink></li>
           <li>Chapters</li>
           <li>Outlines</li>
           <li>Characters</li>

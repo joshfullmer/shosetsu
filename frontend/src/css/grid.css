@@ -1,3 +1,7 @@
+/* ====================================================== */
+/* Main Page Layout */
+/* ====================================================== */
+
 .container {
   height: 100vh;
   display: grid;
@@ -10,7 +14,7 @@
     "main"
     "sidebar"
     "footer"
-    "toolbar"
+    "toolbar";
 }
 
 header.logo {
@@ -41,6 +45,23 @@ footer.toolbar {
   grid-area: toolbar;
 }
 
+/* ====================================================== */
+/* Books Layout */
+/* ====================================================== */
+
+.books {
+  display: grid;
+  grid-gap: 10px;
+}
+
+.books-container {
+  overflow: auto;
+}
+
+/* ====================================================== */
+/* Responsive Layout */
+/* ====================================================== */
+
 @media (min-width: 768px) {
   .container {
     grid-template-columns: 1fr 4fr 2fr;
@@ -49,6 +70,11 @@ footer.toolbar {
       "logo header header"
       "nav main sidebar"
       "footer main toolbar";
+  }
+
+  .books {
+    grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+    grid-auto-rows: minmax(250px, auto);
   }
 }
 

@@ -1,3 +1,10 @@
+/* FONTS */
+
+@font-face {
+  font-family: Kouzan;
+  src: url('../fonts/KouzanGyoushoTTF.ttf');
+}
+
 * {
   box-sizing: border-box;
 }
@@ -19,6 +26,9 @@ body {
 
 header.logo {
   background-color: blanchedalmond;
+  font-family: Kouzan;
+  font-size: 1.5em;
+  text-shadow: 2px 2px lightgray;
 }
 
 header.title {
@@ -47,4 +57,8 @@ footer.footer {
 
 footer.toolbar {
   background-color: grey;
+}
+
+.book {
+  background-color: darkgray;
 }

@@ -8,6 +8,7 @@ import Main from './components/Main';
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
 import Toolbar from './components/Toolbar';
+import BookList from './components/BookList'
 
 class App extends Component {
   render() {
@@ -19,6 +20,7 @@ class App extends Component {
           <Nav />
           <Switch>
             <Route exact path='/' component={Main} />
+            <Route path='/books' component={BookList} />
           </Switch>
           <Sidebar />
           <Footer />

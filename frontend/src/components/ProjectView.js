@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import Title from './Title';
+import BookCard from './BookCard';
 
 export default class ProjectView extends Component {
 
@@ -14,7 +15,8 @@ export default class ProjectView extends Component {
     axios.get(`http://127.0.0.1:8000/projects/${this.props.match.params.id}`)
       .then(response => {
         this.setState({
-          project: response.data
+          project: response.data,
+          loading: false
         });
       })
       .catch(error => {
@@ -23,6 +25,7 @@ export default class ProjectView extends Component {
   }
 
   render() {
+    console.log(this.state.project);
     return (
       <div className="projectview-body body">
         <Title title={`Project ID #${this.props.match.params.id}`} />
@@ -30,6 +33,17 @@ export default class ProjectView extends Component {
           <h2>Project View for Project ID #{this.props.match.params.id}</h2>
           <p>{this.state.project.title}</p>
           <p>{this.state.project.description}</p>
+          <div className='project-books'>
+            {(this.state.loading)
+              ? <p>Loading...</p>
+              : this.state.project.books.map(book =>
+                <BookCard
+                  data={book}
+                  key={book.id}
+                />
+              )
+            }
+          </div>
         </main>
       </div>
     );

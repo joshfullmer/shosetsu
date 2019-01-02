@@ -8,7 +8,7 @@ export default class BookCard extends Component {
       <div className="book-card">
         <header>{book.title}</header>
         <p>{book.description}</p>
-        <footer>{book.project_title}</footer>
+        <footer>Project Title: {book.project_title}</footer>
       </div>
     );
   }

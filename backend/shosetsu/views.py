@@ -12,7 +12,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = models.Project.objects.all()
-    serializer_class = serializers.ProjectSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return serializers.ProjectListSerializer
+        return serializers.ProjectRetrieveSerializer
 
 
 class BookViewSet(viewsets.ModelViewSet):

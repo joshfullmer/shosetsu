@@ -69,7 +69,7 @@ export default class ProjectList extends Component {
         <Title title="Project List" />
         <main className="projectlist-container">
           <h2>Projects</h2>
-          <button onClick={this.openModal}>Open Modal</button>
+          <button onClick={this.openModal}>Add Project</button>
           <Modal
             isOpen={this.state.modalIsOpen}
             onRequestClose={this.closeModal}
@@ -80,7 +80,7 @@ export default class ProjectList extends Component {
             <form onSubmit={this.addProjectFormSubmit}>
               <input placeholder="Project Title" name="title" onChange={this.handleTitleChange} />
               <input placeholder="Project Description" name="description" onChange={this.handleDescriptionChange} />
-              <button type="submit">Submit</button>
+              <button type="submit">Create Project</button>
             </form>
           </Modal>
           <div className="projectlist">

@@ -15,13 +15,27 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
-    
+
     class Meta:
         model = get_user_model()
         fields = '__all__'
 
 
-class ProjectSerializer(serializers.ModelSerializer):
+class ProjectBookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Book
+        fields = ('id', 'title', 'description')
+
+
+class ProjectRetrieveSerializer(serializers.ModelSerializer):
+    books = ProjectBookSerializer(many=True, read_only=True, source='book_set')
+
+    class Meta:
+        model = models.Project
+        fields = '__all__'
+
+
+class ProjectListSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Project
         fields = '__all__'

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import Book from './Book';
+import BookCard from './BookCard';
 
 export default class BookList extends Component {
 
@@ -32,7 +32,7 @@ export default class BookList extends Component {
           {(this.state.loading)
             ? <p>Loading...</p>
             : this.state.books.map(book =>
-              <Book
+              <BookCard
                 data={book}
                 key={book.id}
               />

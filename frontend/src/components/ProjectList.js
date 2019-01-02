@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import Project from './Project';
+import ProjectCard from './ProjectCard';
 
 export default class ProjectList extends Component {
 
@@ -31,7 +31,7 @@ export default class ProjectList extends Component {
           {(this.state.loading)
             ? <p>Loading...</p>
             : this.state.projects.map(project =>
-              <Project
+              <ProjectCard
                 data={project}
                 key={project.id}
               />

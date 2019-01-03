@@ -6,6 +6,7 @@ import Nav from './components/Nav';
 import ProjectList from './components/ProjectList';
 import ProjectView from './components/ProjectView';
 import BookList from './components/BookList';
+import BookView from './components/BookView';
 import Footer from './components/Footer';
 
 class App extends Component {
@@ -22,6 +23,7 @@ class App extends Component {
             <Route exact path='/projects' component={ProjectList} />
             <Route exact path='/projects/:id(\d+)' component={ProjectView} />
             <Route exact path='/books' component={BookList} />
+            <Route exact path='/books/:id(\d+)' component={BookView} />
           </Switch>
 
           <Footer />

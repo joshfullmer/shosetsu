@@ -112,6 +112,19 @@ footer.toolbar {
 }
 
 /* ====================================================== */
+/* Book View Layout */
+/* ====================================================== */
+
+.bookview-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: inherit;
+  grid-template-areas:
+    "header"
+    "main"
+}
+
+/* ====================================================== */
 /* Responsive Layout */
 /* ====================================================== */
 
@@ -179,6 +192,20 @@ footer.toolbar {
       "main sidebar"
       "main toolbar"
   }
+
+/* ====================================================== */
+/* Project View Layout (mid-size)*/
+/* ====================================================== */
+
+.bookview-body {
+  grid-template-columns: 1fr;
+  grid-template-rows: inherit;
+  grid-template-areas:
+    "header"
+    "main"
+    "main"
+}
+
 }
 
 @media (min-width: 992px) {

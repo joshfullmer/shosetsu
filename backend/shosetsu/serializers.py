@@ -43,7 +43,9 @@ class ProjectListSerializer(serializers.ModelSerializer):
 
 class BookSerializer(serializers.ModelSerializer):
     project_title = serializers.SerializerMethodField()
-    project_id = serializers.IntegerField(source='project.id')
+    project_id = serializers.PrimaryKeyRelatedField(
+        queryset=models.Project.objects.all()
+    )
 
     class Meta:
         model = models.Book
@@ -54,6 +56,10 @@ class BookSerializer(serializers.ModelSerializer):
             'project_id',
             'project_title'
         )
+
+    def create(self, validated_data):
+        validated_data['project_id'] = validated_data['project_id'].id
+        return models.Book.objects.create(**validated_data)
 
     def get_project_title(self, obj):
         project = get_object_or_404(models.Project, pk=obj.project.id)

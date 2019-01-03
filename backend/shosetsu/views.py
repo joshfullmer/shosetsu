@@ -21,4 +21,17 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = models.Book.objects.all()
-    serializer_class = serializers.BookSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return serializers.BookListSerializer
+        return serializers.BookRetrieveSerializer
+
+
+class ChapterViewSet(viewsets.ModelViewSet):
+    queryset = models.Chapter.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return serializers.ChapterListSerializer
+        return serializers.ChapterRetrieveSerializer

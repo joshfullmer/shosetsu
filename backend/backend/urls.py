@@ -23,6 +23,7 @@ router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'projects', views.ProjectViewSet)
 router.register(r'books', views.BookViewSet)
+router.register(r'chapters', views.ChapterViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

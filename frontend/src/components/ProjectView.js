@@ -25,18 +25,18 @@ export default class ProjectView extends Component {
   }
 
   render() {
-    console.log(this.state.project);
+    let project = this.state.project;
     return (
       <div className="projectview-body body">
         <Title title={`Project ID #${this.props.match.params.id}`} />
         <main className="projectview-container">
           <h2>Project View for Project ID #{this.props.match.params.id}</h2>
-          <p>{this.state.project.title}</p>
-          <p>{this.state.project.description}</p>
+          <p>{project.title}</p>
+          <p>{project.description}</p>
           <div className='project-books'>
             {(this.state.loading)
               ? <p>Loading...</p>
-              : this.state.project.books.map(book =>
+              : project.books.map(book =>
                 <BookCard
                   data={book}
                   key={book.id}

@@ -124,6 +124,11 @@ footer.toolbar {
     "main"
 }
 
+.book-chapters {
+  display: grid;
+  grid-gap: 10px;
+}
+
 /* ====================================================== */
 /* Responsive Layout */
 /* ====================================================== */
@@ -194,17 +199,22 @@ footer.toolbar {
   }
 
 /* ====================================================== */
-/* Project View Layout (mid-size)*/
+/* Book View Layout (mid-size)*/
 /* ====================================================== */
 
-.bookview-body {
-  grid-template-columns: 1fr;
-  grid-template-rows: inherit;
-  grid-template-areas:
-    "header"
-    "main"
-    "main"
-}
+  .bookview-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: inherit;
+    grid-template-areas:
+      "header"
+      "main"
+      "main"
+  }
+
+  .book-chapters {
+    grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+    grid-auto-rows: minmax(250px, auto);
+  }
 
 }
 

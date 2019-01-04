@@ -3,6 +3,7 @@ import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 
 import Title from './Title';
+import ChapterCard from './ChapterCard';
 
 export default class BookView extends Component {
 
@@ -34,6 +35,17 @@ export default class BookView extends Component {
           <p>Title: {book.title}</p>
           <p>Description: {book.description}</p>
           <p>Project: <NavLink to={`/projects/${book.project_id}`}>{book.project_title}</NavLink></p>
+          <div className="book-chapters">
+            {(this.state.loading)
+              ? <p>Loading...</p>
+              : book.chapters.map(chapter =>
+                <ChapterCard
+                  data={chapter}
+                  key={chapter.id}
+                />
+              )
+            }
+          </div>
         </main>
       </div>
     );

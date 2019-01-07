@@ -21,7 +21,7 @@ export default class BookView extends Component {
         });
       })
       .catch(error => {
-        console.log('Error fetching project data', error);
+        console.log('Error fetching book data', error);
       });
   }
 

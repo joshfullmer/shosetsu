@@ -7,6 +7,7 @@ import ProjectList from './components/ProjectList';
 import ProjectView from './components/ProjectView';
 import BookList from './components/BookList';
 import BookView from './components/BookView';
+import ChapterView from './components/ChapterView';
 import Footer from './components/Footer';
 
 class App extends Component {
@@ -24,6 +25,7 @@ class App extends Component {
             <Route exact path='/projects/:id(\d+)' component={ProjectView} />
             <Route exact path='/books' component={BookList} />
             <Route exact path='/books/:id(\d+)' component={BookView} />
+            <Route exact path='/chapters/:id(\d+)' component={ChapterView} />
           </Switch>
 
           <Footer />

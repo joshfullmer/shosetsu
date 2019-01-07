@@ -18,7 +18,7 @@ header.logo {
 }
 
 header.title {
-  grid-area: header;
+  grid-area: title;
 }
 
 nav {
@@ -63,7 +63,7 @@ footer.toolbar {
   grid-template-columns: 1fr;
   grid-auto-rows: inherit;
   grid-template-areas:
-    "header"
+    "title"
     "main"
     "sidebar"
     "toolbar";
@@ -78,7 +78,7 @@ footer.toolbar {
   grid-template-columns: 1fr;
   grid-auto-rows: inherit;
   grid-template-areas:
-    "header"
+    "title"
     "main"
 }
 
@@ -105,7 +105,7 @@ footer.toolbar {
   grid-template-columns: 1fr;
   grid-auto-rows: inherit;
   grid-template-areas:
-    "header"
+    "title"
     "main"
     "sidebar"
     "toolbar";
@@ -120,13 +120,38 @@ footer.toolbar {
   grid-template-columns: 1fr;
   grid-auto-rows: inherit;
   grid-template-areas:
-    "header"
+    "title"
     "main"
 }
 
 .book-chapters {
   display: grid;
   grid-gap: 10px;
+}
+
+/* ====================================================== */
+/* Chapter View Layout */
+/* ====================================================== */
+
+.chapter-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: inherit;
+  grid-template-areas:
+    "title"
+    "content"
+    "toolbar"
+}
+
+.chapter-content {
+  padding: 0;
+  overflow: scroll;
+  grid-area: content;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "main"
+    "sidebar"
 }
 
 /* ====================================================== */
@@ -157,7 +182,7 @@ footer.toolbar {
     grid-template-columns: 3fr 1fr;
     grid-template-rows: inherit;
     grid-template-areas:
-      "header sidebar"
+      "title sidebar"
       "main sidebar"
       "main toolbar"
   }
@@ -170,7 +195,7 @@ footer.toolbar {
     grid-template-columns: 1fr;
     grid-template-rows: inherit;
     grid-template-areas:
-      "header"
+      "title"
       "main"
       "main"
   }
@@ -193,7 +218,7 @@ footer.toolbar {
     grid-template-columns: 3fr 1fr;
     grid-template-rows: inherit;
     grid-template-areas:
-      "header header"
+      "title title"
       "main sidebar"
       "main toolbar"
   }
@@ -206,7 +231,7 @@ footer.toolbar {
     grid-template-columns: 1fr;
     grid-template-rows: inherit;
     grid-template-areas:
-      "header"
+      "title"
       "main"
       "main"
   }
@@ -214,6 +239,25 @@ footer.toolbar {
   .book-chapters {
     grid-template-columns: repeat(auto-fit, minmax(200px, auto));
     grid-auto-rows: minmax(250px, auto);
+  }
+
+/* ====================================================== */
+/* Chapter View Layout (mid-size)*/
+/* ====================================================== */
+
+  .chapter-body {
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: inherit;
+    grid-template-areas:
+      "title toolbar"
+      "content content"
+      "content content"
+  }
+
+  .chapter-content {
+    grid-template-columns: 3fr 1fr;
+    grid-template-areas:
+      "main sidebar"
   }
 
 }

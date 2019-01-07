@@ -21,14 +21,18 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ProjectBookSerializer(serializers.ModelSerializer):
+class ProjectBooksSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Book
         fields = ('id', 'title', 'description')
 
 
 class ProjectRetrieveSerializer(serializers.ModelSerializer):
-    books = ProjectBookSerializer(many=True, read_only=True, source='book_set')
+    books = ProjectBooksSerializer(
+        many=True,
+        read_only=True,
+        source='book_set'
+    )
 
     class Meta:
         model = models.Project
@@ -41,7 +45,7 @@ class ProjectListSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class BookChapterSerializer(serializers.ModelSerializer):
+class BookChaptersSerializer(serializers.ModelSerializer):
     content_preview = serializers.SerializerMethodField()
 
     class Meta:
@@ -58,11 +62,10 @@ class BookChapterSerializer(serializers.ModelSerializer):
 
 
 class BookRetrieveSerializer(serializers.ModelSerializer):
-    project_title = serializers.SerializerMethodField()
-    chapters = BookChapterSerializer(
+    project = ProjectListSerializer()
+    chapters = BookChaptersSerializer(
         many=True,
         read_only=True,
-        source='chapter_set'
     )
 
     class Meta:
@@ -71,25 +74,19 @@ class BookRetrieveSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'description',
-            'project_id',
-            'project_title',
+            'project',
             'chapters'
         )
 
     def create(self, validated_data):
-        validated_data['project_id'] = validated_data['project_id'].id
+        if self.context['view'].kwargs:
+            project_id = self.context['view'].kwargs['project_pk']
+            validated_data['project_id'] = project_id
         return models.Book.objects.create(**validated_data)
-
-    def get_project_title(self, obj):
-        project = get_object_or_404(models.Project, pk=obj.project.id)
-        return project.title
 
 
 class BookListSerializer(serializers.ModelSerializer):
-    project_title = serializers.SerializerMethodField()
-    project_id = serializers.PrimaryKeyRelatedField(
-        queryset=models.Project.objects.all()
-    )
+    project = ProjectListSerializer()
 
     class Meta:
         model = models.Book
@@ -97,20 +94,11 @@ class BookListSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'description',
-            'project_id',
-            'project_title'
+            'project'
         )
-
-    def get_project_title(self, obj):
-        project = get_object_or_404(models.Project, pk=obj.project.id)
-        return project.title
 
 
 class ChapterRetrieveSerializer(serializers.ModelSerializer):
-    book_id = serializers.PrimaryKeyRelatedField(
-        queryset=models.Book.objects.all()
-    )
-
     class Meta:
         model = models.Chapter
         fields = (
@@ -121,15 +109,8 @@ class ChapterRetrieveSerializer(serializers.ModelSerializer):
             'book_id'
         )
 
-    def create(self, validated_data):
-        validated_data['book_id'] = validated_data['book_id'].id
-        return models.Chapter.objects.create(**validated_data)
-
 
 class ChapterListSerializer(serializers.ModelSerializer):
-    book_id = serializers.PrimaryKeyRelatedField(
-        queryset=models.Book.objects.all()
-    )
     content_preview = serializers.SerializerMethodField()
 
     class Meta:
@@ -144,3 +125,50 @@ class ChapterListSerializer(serializers.ModelSerializer):
     def get_content_preview(self, obj):
         chapter = get_object_or_404(models.Chapter, pk=obj.id)
         return chapter.content[0:100]
+
+
+class ElementTypeFieldsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ElementField
+        fields = '__all__'
+
+
+class ElementTypeSerializer(serializers.ModelSerializer):
+    element_fields = ElementTypeFieldsSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.ElementType
+        fields = (
+            'id',
+            'name',
+            'project_id',
+            'element_fields'
+        )
+
+
+class ElementSerializer(serializers.ModelSerializer):
+    project = ProjectListSerializer()
+    element_type = ElementTypeSerializer()
+
+    class Meta:
+        model = models.Element
+        fields = '__all__'
+
+
+class ElementFieldSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ElementField
+        fields = (
+            'id',
+            'label',
+            'name',
+            'type',
+            'details',
+            'element_type_id'
+        )
+
+
+class ElementValueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ElementValue
+        fields = '__all__'

@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from rest_framework import authtoken, routers
+from rest_framework_nested import routers
 
 from shosetsu import views
 
@@ -24,9 +24,25 @@ router.register(r'users', views.UserViewSet)
 router.register(r'projects', views.ProjectViewSet)
 router.register(r'books', views.BookViewSet)
 router.register(r'chapters', views.ChapterViewSet)
+router.register(r'element-types', views.ElementTypeViewSet)
+router.register(r'elements', views.ElementViewSet)
+router.register(r'element-fields', views.ElementFieldViewSet)
+router.register(r'element-values', views.ElementValueViewSet)
+
+projects_router = routers.NestedDefaultRouter(
+    router,
+    r'projects',
+    lookup='project'
+)
+projects_router.register(
+    r'books',
+    views.ProjectBooksViewSet,
+    base_name='project-books'
+)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('', include(projects_router.urls)),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls'))
 ]

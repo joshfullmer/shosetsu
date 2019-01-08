@@ -47,14 +47,18 @@ class ChapterViewSet(viewsets.ModelViewSet):
         return serializers.ChapterRetrieveSerializer
 
 
-class ElementTypeViewSet(viewsets.ModelViewSet):
-    queryset = models.ElementType.objects.all()
-    serializer_class = serializers.ElementTypeSerializer
-
-
 class ElementViewSet(viewsets.ModelViewSet):
     queryset = models.Element.objects.all()
-    serializer_class = serializers.ElementSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return serializers.ElementListSerializer
+        return serializers.ElementRetrieveSerializer
+
+
+class ElementInstanceViewSet(viewsets.ModelViewSet):
+    queryset = models.ElementInstance.objects.all()
+    serializer_class = serializers.ElementInstanceSerializer
 
 
 class ElementFieldViewSet(viewsets.ModelViewSet):

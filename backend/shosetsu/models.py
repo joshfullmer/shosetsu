@@ -36,18 +36,6 @@ class Chapter(models.Model):
         return self.title
 
 
-class ElementType(models.Model):
-    name = models.CharField(max_length=100)
-    project = models.ForeignKey(
-        Project,
-        related_name='element_types',
-        on_delete=models.CASCADE
-    )
-
-    def __str__(self):
-        return self.name
-
-
 class Element(models.Model):
     name = models.CharField(max_length=100)
     project = models.ForeignKey(
@@ -55,9 +43,21 @@ class Element(models.Model):
         related_name='elements',
         on_delete=models.CASCADE
     )
-    element_type = models.ForeignKey(
-        ElementType,
-        related_name='elements',
+
+    def __str__(self):
+        return self.name
+
+
+class ElementInstance(models.Model):
+    name = models.CharField(max_length=100)
+    project = models.ForeignKey(
+        Project,
+        related_name='element_instances',
+        on_delete=models.CASCADE
+    )
+    element = models.ForeignKey(
+        Element,
+        related_name='element_instances',
         on_delete=models.CASCADE
     )
 
@@ -66,8 +66,8 @@ class Element(models.Model):
 
 
 class ElementField(models.Model):
-    element_type = models.ForeignKey(
-        ElementType,
+    element = models.ForeignKey(
+        Element,
         related_name='element_fields',
         on_delete=models.CASCADE
     )
@@ -81,8 +81,8 @@ class ElementField(models.Model):
 
 
 class ElementValue(models.Model):
-    element = models.ForeignKey(
-        Element,
+    element_instance = models.ForeignKey(
+        ElementInstance,
         related_name='element_values',
         on_delete=models.CASCADE
     )

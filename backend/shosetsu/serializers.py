@@ -86,6 +86,8 @@ class BookRetrieveSerializer(serializers.ModelSerializer):
         if self.context['view'].kwargs:
             project_id = self.context['view'].kwargs['project_pk']
             validated_data['project_id'] = project_id
+        else:
+            validated_data['project'] = validated_data.pop('project_id')
         return models.Book.objects.create(**validated_data)
 
 
@@ -104,7 +106,7 @@ class BookListSerializer(serializers.ModelSerializer):
 
 class ChapterRetrieveSerializer(serializers.ModelSerializer):
     book_id = serializers.PrimaryKeyRelatedField(
-        queryset=models.Chapter.objects.all()
+        queryset=models.Book.objects.all()
     )
 
     class Meta:
@@ -117,11 +119,15 @@ class ChapterRetrieveSerializer(serializers.ModelSerializer):
             'book_id'
         )
 
+    def create(self, validated_data):
+        validated_data['book'] = validated_data.pop('book_id')
+        return models.Chapter.objects.create(**validated_data)
+
 
 class ChapterListSerializer(serializers.ModelSerializer):
     content_preview = serializers.SerializerMethodField()
     book_id = serializers.PrimaryKeyRelatedField(
-        queryset=models.Chapter.objects.all()
+        queryset=models.Book.objects.all()
     )
 
     class Meta:
@@ -138,7 +144,7 @@ class ChapterListSerializer(serializers.ModelSerializer):
         return chapter.content[0:100]
 
 
-class ElementTypeFieldsSerializer(serializers.ModelSerializer):
+class ElementsFieldsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ElementField
         fields = (
@@ -151,14 +157,14 @@ class ElementTypeFieldsSerializer(serializers.ModelSerializer):
         )
 
 
-class ElementTypeSerializer(serializers.ModelSerializer):
+class ElementRetrieveSerializer(serializers.ModelSerializer):
     project_id = serializers.PrimaryKeyRelatedField(
         queryset=models.Project.objects.all()
     )
-    element_fields = ElementTypeFieldsSerializer(many=True, read_only=True)
+    element_fields = ElementsFieldsSerializer(many=True, read_only=True)
 
     class Meta:
-        model = models.ElementType
+        model = models.Element
         fields = (
             'id',
             'name',
@@ -166,74 +172,23 @@ class ElementTypeSerializer(serializers.ModelSerializer):
             'element_fields'
         )
 
-
-class ElementTypeSimpleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.ElementType
-        fields = (
-            'id',
-            'name'
-        )
+    def create(self, validated_data):
+        validated_data['project'] = validated_data.pop('project_id')
+        return models.Element.objects.create(**validated_data)
 
 
-class ElementSerializer(serializers.ModelSerializer):
-    project = ProjectListSerializer(read_only=True)
+class ElementListSerializer(serializers.ModelSerializer):
     project_id = serializers.PrimaryKeyRelatedField(
-        queryset=models.Project.objects.all(),
-        write_only=True
-    )
-    element_type = ElementTypeSimpleSerializer(read_only=True)
-    element_type_id = serializers.PrimaryKeyRelatedField(
-        queryset=models.ElementType.objects.all(),
-        write_only=True
+        queryset=models.Project.objects.all()
     )
 
     class Meta:
         model = models.Element
-        fields = '__all__'
-
-    def create(self, validated_data):
-        validated_data['project'] = validated_data.pop('project_id')
-        validated_data['element_type'] = validated_data.pop('element_type_id')
-        return models.Element.objects.create(**validated_data)
-
-    def to_representation(self, instance):
-        response = super().to_representation(instance)
-        element_id = response['id']
-        element_type_id = response['element_type']['id']
-        element_fields = models.ElementField.objects.filter(
-            element_type_id=element_type_id
-        )
-        element_values = models.ElementValue.objects.filter(
-            element_id=element_id
-        )
-        field_names = {field.id: field.name for field in element_fields}
-        field_values = {value.element_field.id: value.value
-                        for value in element_values}
-        for k, v in field_names.items():
-            response[v] = field_values.get(k, '')
-        return response
-
-
-class ElementFieldSerializer(serializers.ModelSerializer):
-    element_type_id = serializers.PrimaryKeyRelatedField(
-        queryset=models.ElementType.objects.all()
-    )
-
-    class Meta:
-        model = models.ElementField
         fields = (
             'id',
-            'label',
             'name',
-            'type',
-            'details',
-            'element_type_id'
+            'project_id'
         )
-
-    def create(self, validated_data):
-        validated_data['element_type'] = validated_data.pop('element_type_id')
-        return models.ElementField.objects.create(**validated_data)
 
 
 class ElementSimpleSerializer(serializers.ModelSerializer):
@@ -245,10 +200,79 @@ class ElementSimpleSerializer(serializers.ModelSerializer):
         )
 
 
-class ElementValueSerializer(serializers.ModelSerializer):
+class ElementInstanceSerializer(serializers.ModelSerializer):
+    project = ProjectListSerializer(read_only=True)
+    project_id = serializers.PrimaryKeyRelatedField(
+        queryset=models.Project.objects.all(),
+        write_only=True
+    )
     element = ElementSimpleSerializer(read_only=True)
     element_id = serializers.PrimaryKeyRelatedField(
         queryset=models.Element.objects.all(),
+        write_only=True
+    )
+
+    class Meta:
+        model = models.ElementInstance
+        fields = '__all__'
+
+    def create(self, validated_data):
+        validated_data['project'] = validated_data.pop('project_id')
+        validated_data['element'] = validated_data.pop('element_id')
+        return models.ElementInstance.objects.create(**validated_data)
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        element_instance_id = response['id']
+        element_id = response['element']['id']
+        element_fields = models.ElementField.objects.filter(
+            element_id=element_id
+        )
+        element_values = models.ElementValue.objects.filter(
+            element_instance_id=element_instance_id
+        )
+        field_names = {field.id: field.name for field in element_fields}
+        field_values = {value.element_field.id: value.value
+                        for value in element_values}
+        for k, v in field_names.items():
+            response[v] = field_values.get(k, '')
+        return response
+
+
+class ElementFieldSerializer(serializers.ModelSerializer):
+    element_id = serializers.PrimaryKeyRelatedField(
+        queryset=models.Element.objects.all()
+    )
+
+    class Meta:
+        model = models.ElementField
+        fields = (
+            'id',
+            'label',
+            'name',
+            'type',
+            'details',
+            'element_id'
+        )
+
+    def create(self, validated_data):
+        validated_data['element'] = validated_data.pop('element_id')
+        return models.ElementField.objects.create(**validated_data)
+
+
+class ElementInstanceSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ElementInstance
+        fields = (
+            'id',
+            'name'
+        )
+
+
+class ElementValueSerializer(serializers.ModelSerializer):
+    element_instance = ElementInstanceSimpleSerializer(read_only=True)
+    element_instance_id = serializers.PrimaryKeyRelatedField(
+        queryset=models.ElementInstance.objects.all(),
         write_only=True
     )
 
@@ -263,7 +287,9 @@ class ElementValueSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        validated_data['element'] = validated_data.pop('element_id')
+        validated_data['element_instance'] = validated_data.pop(
+            'element_instance_id'
+        )
         validated_data['element_field'] = validated_data.pop(
             'element_field_id'
         )

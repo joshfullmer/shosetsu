@@ -145,7 +145,7 @@ footer.toolbar {
 
 .chapter-content {
   padding: 0;
-  overflow: scroll;
+  overflow: overlay;
   grid-area: content;
   display: grid;
   grid-template-columns: 1fr;

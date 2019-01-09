@@ -14,7 +14,7 @@ export default class ChapterView extends Component {
   }
 
   componentDidMount() {
-    axios.get(`http://127.0.0.1:8000/chapters/${this.props.match.params.id}`)
+    axios.get(`http://127.0.0.1:8000/chapter/${this.props.match.params.id}`)
       .then(response => {
         this.setState({
           chapter: response.data,

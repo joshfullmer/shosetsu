@@ -21,23 +21,23 @@ from shosetsu import views
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
-router.register(r'projects', views.ProjectViewSet)
-router.register(r'books', views.BookViewSet)
-router.register(r'chapters', views.ChapterViewSet)
-router.register(r'elements', views.ElementViewSet)
-router.register(r'element-instances', views.ElementInstanceViewSet)
-router.register(r'element-fields', views.ElementFieldViewSet)
-router.register(r'element-values', views.ElementValueViewSet)
+router.register(r'project', views.ProjectViewSet)
+router.register(r'book', views.BookViewSet)
+router.register(r'chapter', views.ChapterViewSet)
+router.register(r'element', views.ElementViewSet)
+router.register(r'element-instance', views.ElementInstanceViewSet)
+router.register(r'element-field', views.ElementFieldViewSet)
+router.register(r'element-value', views.ElementValueViewSet)
 
 projects_router = routers.NestedDefaultRouter(
     router,
-    r'projects',
+    r'project',
     lookup='project'
 )
 projects_router.register(
-    r'books',
+    r'book',
     views.ProjectBooksViewSet,
-    base_name='project-books'
+    base_name='project-book'
 )
 
 urlpatterns = [

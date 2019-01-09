@@ -13,7 +13,7 @@ export default class BookView extends Component {
   }
 
   componentDidMount() {
-    axios.get(`http://127.0.0.1:8000/books/${this.props.match.params.id}`)
+    axios.get(`http://127.0.0.1:8000/book/${this.props.match.params.id}`)
       .then(response => {
         this.setState({
           book: response.data,

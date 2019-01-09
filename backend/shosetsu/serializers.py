@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
+from rest_framework.relations import reverse
 
 from . import models
 
@@ -39,12 +40,28 @@ class ProjectRetrieveSerializer(serializers.ModelSerializer):
 
 
 class ProjectListSerializer(serializers.ModelSerializer):
+    books_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Project
+        fields = '__all__'
+
+    def get_books_url(self, obj):
+        request = self.context.get('request')
+        endpoint = reverse(
+            'project-book-list',
+            kwargs={'project_pk': obj.pk},
+            request=request)
+        return endpoint
+
+
+class ProjectSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Project
         fields = '__all__'
 
 
-class BookChaptersSerializer(serializers.ModelSerializer):
+class BookChapterListSerializer(serializers.ModelSerializer):
     content_preview = serializers.SerializerMethodField()
 
     class Meta:
@@ -61,12 +78,12 @@ class BookChaptersSerializer(serializers.ModelSerializer):
 
 
 class BookRetrieveSerializer(serializers.ModelSerializer):
-    project = ProjectListSerializer(read_only=True)
+    project = ProjectSimpleSerializer(read_only=True)
     project_id = serializers.PrimaryKeyRelatedField(
         queryset=models.Project.objects.all(),
         write_only=True
     )
-    chapters = BookChaptersSerializer(
+    chapters = BookChapterListSerializer(
         many=True,
         read_only=True,
     )
@@ -92,7 +109,8 @@ class BookRetrieveSerializer(serializers.ModelSerializer):
 
 
 class BookListSerializer(serializers.ModelSerializer):
-    project = ProjectListSerializer(read_only=True)
+    project = ProjectSimpleSerializer(read_only=True)
+    book_url = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Book
@@ -100,8 +118,19 @@ class BookListSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'description',
+            'book_url',
             'project'
         )
+
+    def get_book_url(self, obj):
+        request = self.context.get('request')
+        endpoint = reverse(
+            'project-book-detail',
+            kwargs={'project_pk': obj.project.pk,
+                    'pk': obj.pk},
+            request=request
+        )
+        return endpoint
 
 
 class ChapterRetrieveSerializer(serializers.ModelSerializer):
@@ -144,7 +173,7 @@ class ChapterListSerializer(serializers.ModelSerializer):
         return chapter.content[0:100]
 
 
-class ElementsFieldsSerializer(serializers.ModelSerializer):
+class ElementsFieldListSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ElementField
         fields = (
@@ -161,7 +190,7 @@ class ElementRetrieveSerializer(serializers.ModelSerializer):
     project_id = serializers.PrimaryKeyRelatedField(
         queryset=models.Project.objects.all()
     )
-    element_fields = ElementsFieldsSerializer(many=True, read_only=True)
+    element_fields = ElementsFieldListSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Element

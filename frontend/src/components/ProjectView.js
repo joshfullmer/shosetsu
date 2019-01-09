@@ -14,7 +14,7 @@ export default class ProjectView extends Component {
   };
 
   componentDidMount() {
-    axios.get(`http://127.0.0.1:8000/projects/${this.props.match.params.id}`)
+    axios.get(`http://127.0.0.1:8000/project/${this.props.match.params.id}`)
       .then(response => {
         this.setState({
           project: response.data,

@@ -10,7 +10,7 @@ export default class Nav extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://127.0.0.1:8000/elements/')
+    axios.get('http://127.0.0.1:8000/element/')
       .then(response => {
         this.setState({
           elements: response.data,

@@ -18,7 +18,7 @@ export default class ProjectList extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://127.0.0.1:8000/projects/')
+    axios.get('http://127.0.0.1:8000/project/')
       .then(response => {
         this.setState({
           projects: response.data,
@@ -53,9 +53,9 @@ export default class ProjectList extends Component {
       title: this.state.title,
       description: this.state.description
     }
-    axios.post('http://127.0.0.1:8000/projects/', data)
+    axios.post('http://127.0.0.1:8000/project/', data)
       .then(response => {
-        this.props.history.push(`/projects/${response.data.id}`);
+        this.props.history.push(`/project/${response.data.id}`);
       })
       .catch(error => {
         console.log('Project could not be created', error)

@@ -6,7 +6,7 @@ export default class BookCard extends Component {
     let book = this.props.data; 
 
     return (
-      <NavLink to={`/books/${book.id}`} className="book-card">
+      <NavLink to={`/book/${book.id}`} className="book-card">
         <header>{book.title}</header>
         <p>{book.description}</p>
         <footer>Project Title: {book.project_title}</footer>

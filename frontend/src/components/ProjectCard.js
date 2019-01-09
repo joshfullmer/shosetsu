@@ -6,7 +6,7 @@ export default class ProjectCard extends Component {
     let project = this.props.data;
 
     return (
-      <NavLink to={`/projects/${project.id}`} className="project-card">
+      <NavLink to={`/project/${project.id}`} className="project-card">
         <header>{project.title}</header>
         <p>{project.description}</p>
       </NavLink>

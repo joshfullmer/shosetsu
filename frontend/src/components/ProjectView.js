@@ -50,10 +50,10 @@ export default class ProjectView extends Component {
       description: this.state.description,
       project_id: this.state.project.id
     }
-    axios.post('http://127.0.0.1:8000/books/', data)
+    axios.post('http://127.0.0.1:8000/book/', data)
       .then(response => {
         console.log(response);
-        this.props.history.push(`/books/${response.data.id}`);
+        this.props.history.push(`/book/${response.data.id}`);
       })
       .catch(error => {
         console.log('Book could not be created', error)

@@ -5,7 +5,7 @@ export default class ChapterCard extends Component {
   render() {
     let chapter = this.props.data;
     return (
-      <NavLink to={`/chapters/${chapter.id}`} className="book-card">
+      <NavLink to={`/chapter/${chapter.id}`} className="book-card">
         <header>{chapter.title}</header>
         <p>Preview: {chapter.content_preview}...</p>
       </NavLink>

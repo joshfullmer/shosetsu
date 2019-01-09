@@ -29,7 +29,7 @@ export default class Nav extends Component {
       <nav>
         Navigation
         <ul className="nav-list">
-          <li><NavLink to='/books'>Books</NavLink></li>
+          <li><NavLink to='/book'>Books</NavLink></li>
           <li>Outlines</li>
           <li>Story Elements</li>
           <ul>

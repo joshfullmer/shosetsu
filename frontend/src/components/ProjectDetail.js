@@ -5,7 +5,7 @@ import Modal from 'react-modal';
 import Title from './Title';
 import BookCard from './BookCard';
 
-export default class ProjectView extends Component {
+export default class ProjectDetail extends Component {
 
   state = {
     project: {},
@@ -14,7 +14,7 @@ export default class ProjectView extends Component {
   };
 
   componentDidMount() {
-    axios.get(`http://127.0.0.1:8000/project/${this.props.match.params.id}`)
+    axios.get(`http://127.0.0.1:8000/project/${this.props.match.params.project_id}/`)
       .then(response => {
         this.setState({
           project: response.data,
@@ -50,7 +50,7 @@ export default class ProjectView extends Component {
       description: this.state.description,
       project_id: this.state.project.id
     }
-    axios.post('http://127.0.0.1:8000/book/', data)
+    axios.post(`http://127.0.0.1:8000/project/${data.project_id}/book/`, data)
       .then(response => {
         console.log(response);
         this.props.history.push(`/book/${response.data.id}`);
@@ -62,11 +62,13 @@ export default class ProjectView extends Component {
 
   render() {
     let project = this.state.project;
+    let project_id = this.props.match.params.project_id;
+
     return (
       <div className="projectview-body body">
-        <Title title={`Project ID #${this.props.match.params.id}`} />
+        <Title title={`Project ID #${project_id}`} />
         <main className="projectview-container">
-          <h2>Project View for Project ID #{this.props.match.params.id}</h2>
+          <h2>Project View for Project ID #{project_id}</h2>
           <button onClick={this.openModal}>Add Book</button>
           <Modal
             isOpen={this.state.modalIsOpen}
@@ -90,6 +92,7 @@ export default class ProjectView extends Component {
                 <BookCard
                   data={book}
                   key={book.id}
+                  project_id={project.id}
                 />
               )
             }

@@ -38,7 +38,7 @@ nav {
   background-color: #fbaea8;
 }
 
-.nav-list {
+nav > * {
   list-style: none;
 }
 

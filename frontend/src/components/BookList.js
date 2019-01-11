@@ -10,11 +10,12 @@ export default class BookList extends Component {
 
   state = {
     books: [],
+    project_id: this.props.match.params.project_id,
     loading: true,
   }
 
   componentDidMount() {
-    axios.get('http://127.0.0.1:8000/book/')
+    axios.get(`http://127.0.0.1:8000/project/${this.state.project_id}/book`)
       .then(response => {
         this.setState({
           books: response.data,
@@ -29,7 +30,7 @@ export default class BookList extends Component {
   render() {
     return (
       <div className="booklist-body body">
-        <Title title="Book List" />
+        <Title title={`Book List for Project #${this.state.project_id}`} />
         <main className="booklist-container">
           <h2>Books</h2>
           <div className="booklist">
@@ -39,6 +40,7 @@ export default class BookList extends Component {
                 <BookCard
                   data={book}
                   key={book.id}
+                  project_id={this.state.project_id}
                 />
               )
             }

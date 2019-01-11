@@ -6,15 +6,15 @@ import Sidebar from './Sidebar';
 import Toolbar from './Toolbar';
 
 
-export default class ChapterView extends Component {
+export default class ChapterDetail extends Component {
 
   state = {
-    chapter: {},
+    chapter: {id: this.props.match.params.chapter_id},
     loading: true
   }
 
   componentDidMount() {
-    axios.get(`http://127.0.0.1:8000/chapter/${this.props.match.params.id}`)
+    axios.get(`http://127.0.0.1:8000/project/${this.props.match.params.project_id}/book/${this.props.match.params.book_id}/chapter/${this.state.chapter.id}/`)
       .then(response => {
         this.setState({
           chapter: response.data,

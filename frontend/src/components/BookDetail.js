@@ -16,6 +16,7 @@ export default class BookDetail extends Component {
   componentDidMount() {
     axios.get(`http://127.0.0.1:8000/project/${this.state.project_id}/book/${this.state.book.id}/`)
       .then(response => {
+        console.log(response);
         this.setState({
           book: response.data,
           loading: false
@@ -36,7 +37,7 @@ export default class BookDetail extends Component {
           <h2>Book view for Book #{book.id}</h2>
           <p>Title: {book.title}</p>
           <p>Description: {book.description}</p>
-          <p>Project: <NavLink to={`/projects/${book.project_id}`}>{book.project_title}</NavLink></p>
+          <p>Project: {!this.state.loading && <NavLink to={`/project/${book.project.id}`}>{book.project.title}</NavLink>}</p>
           <div className="book-chapters">
             {(this.state.loading)
               ? <p>Loading...</p>
@@ -44,8 +45,8 @@ export default class BookDetail extends Component {
                 <ChapterCard
                   data={chapter}
                   key={chapter.id}
-                  project_id={this.state.project_id}
-                  book_id={book.id}
+                  project={book.project}
+                  book={book}
                 />
               )
             }

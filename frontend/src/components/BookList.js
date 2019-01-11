@@ -40,7 +40,7 @@ export default class BookList extends Component {
                 <BookCard
                   data={book}
                   key={book.id}
-                  project_id={this.state.project_id}
+                  project={book.project}
                 />
               )
             }

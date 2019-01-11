@@ -92,7 +92,7 @@ export default class ProjectDetail extends Component {
                 <BookCard
                   data={book}
                   key={book.id}
-                  project_id={project.id}
+                  project={project}
                 />
               )
             }

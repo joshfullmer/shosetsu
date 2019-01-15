@@ -209,6 +209,15 @@ class ElementsFieldListSerializer(serializers.ModelSerializer):
         )
 
 
+class ElementElementInstanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ElementInstance
+        fields = (
+            'id',
+            'name'
+        )
+
+
 class ElementRetrieveSerializer(serializers.ModelSerializer):
     project_id = serializers.PrimaryKeyRelatedField(
         queryset=models.Project.objects.all()
@@ -234,6 +243,10 @@ class ElementListSerializer(serializers.ModelSerializer):
         queryset=models.Project.objects.all()
     )
     instances_url = serializers.SerializerMethodField()
+    element_instances = ElementElementInstanceSerializer(
+        many=True,
+        read_only=True
+    )
     fields_url = serializers.SerializerMethodField()
 
     class Meta:
@@ -243,6 +256,7 @@ class ElementListSerializer(serializers.ModelSerializer):
             'name',
             'project_id',
             'instances_url',
+            'element_instances',
             'fields_url'
         )
 

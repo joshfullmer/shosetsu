@@ -15,7 +15,7 @@ export default class BookList extends Component {
   }
 
   componentDidMount() {
-    axios.get(`http://127.0.0.1:8000/project/${this.state.project_id}/book`)
+    axios.get(`http://127.0.0.1:8000/project/${this.state.project_id}/book/`)
       .then(response => {
         this.setState({
           books: response.data,
@@ -23,7 +23,7 @@ export default class BookList extends Component {
         })
       })
       .catch(error => {
-        console.log('Error fetching and parsing data', error)
+        console.log('Error fetching and parsing book data', error)
       });
   }
 
@@ -37,12 +37,12 @@ export default class BookList extends Component {
             {(this.state.loading)
               ? <p>Loading...</p>
               : this.state.books.map(book =>
-                <BookCard
-                  data={book}
-                  key={book.id}
-                  project={book.project}
-                />
-              )
+                  <BookCard
+                    data={book}
+                    key={book.id}
+                    project={book.project}
+                  />
+                )
             }
           </div>
         </main>

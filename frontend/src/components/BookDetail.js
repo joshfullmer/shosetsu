@@ -16,7 +16,6 @@ export default class BookDetail extends Component {
   componentDidMount() {
     axios.get(`http://127.0.0.1:8000/project/${this.state.project_id}/book/${this.state.book.id}/`)
       .then(response => {
-        console.log(response);
         this.setState({
           book: response.data,
           loading: false

@@ -66,6 +66,20 @@ footer.toolbar {
   background-color: darkgray;
 }
 
+.instance-card {
+  background-color: darkolivegreen;
+}
+
+.instance-data {
+  border-collapse: collapse;
+}
+
+.instance-data td, .instance-data th {
+  background-color: sandybrown;
+  border: 1px solid white;
+  padding: 8px;
+}
+
 div.body {
   padding: 0;
 }

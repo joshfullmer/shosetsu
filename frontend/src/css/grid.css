@@ -154,6 +154,48 @@ footer.toolbar {
     "sidebar"
 }
 
+
+/* ====================================================== */
+/* Element List Layout */
+/* ====================================================== */
+
+.elementlist {
+  display: grid;
+  grid-gap: 10px;
+}
+
+.elementlist-container {
+  overflow: auto;
+}
+
+.elementlist-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: inherit;
+  grid-template-areas:
+    "title"
+    "main";
+}
+
+
+/* ====================================================== */
+/* Element Detail Layout */
+/* ====================================================== */
+
+.element-container {
+  overflow: auto;
+}
+
+.element-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: inherit;
+  grid-template-areas:
+    "title"
+    "main";
+}
+
+
 /* ====================================================== */
 /* Responsive Layout */
 /* ====================================================== */
@@ -259,6 +301,40 @@ footer.toolbar {
     grid-template-areas:
       "main sidebar"
   }
+
+
+/* ====================================================== */
+/* Element List Layout (mid-size) */
+/* ====================================================== */
+
+  .elementlist {
+    grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+    grid-auto-rows: minmax(250px, auto);
+  }
+
+  .elementlist-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: inherit;
+    grid-template-areas:
+      "title"
+      "main"
+      "main"
+  }
+
+
+/* ====================================================== */
+/* Element Detail Layout (mid-size) */
+/* ====================================================== */
+
+.element-body {
+  grid-template-columns: 1fr;
+  grid-template-rows: inherit;
+  grid-template-areas:
+    "title"
+    "main"
+    "main"
+}
+
 
 }
 

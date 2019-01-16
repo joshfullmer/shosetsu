@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import Logo from './components/Logo';
 import ProjectList from './components/ProjectList';
@@ -12,6 +12,7 @@ import ProjectListNav from './components/ProjectListNav';
 import ProjectDetailNav from './components/ProjectDetailNav';
 import ElementList from './components/ElementList'
 import ElementDetail from './components/ElementDetail';
+import NotFound from './components/NotFound';
 
 class App extends Component {
   render() {
@@ -22,8 +23,7 @@ class App extends Component {
 
           {/* Nav */}
           <nav>
-            <Route exact path='/' component={ProjectListNav} />
-            <Route path='/project/' component={ProjectListNav} />
+            <Route path='/' component={ProjectListNav} />
             <Route path='/project/:project_id(\d+)/' component={ProjectDetailNav} />
           </nav>
           
@@ -38,6 +38,8 @@ class App extends Component {
             <Route exact path='/project/:project_id(\d+)/book/:book_id(\d+)/chapter/:chapter_id(\d+)' component={ChapterDetail} />
             <Route exact path='/project/:project_id(\d+)/element' component={ElementList} />
             <Route exact path='/project/:project_id(\d+)/element/:element_id(\d+)' component={props => <ElementDetail key={props.match.params.element_id} {...props} />} />
+            <Route exact path='/404' component={NotFound} />
+            <Redirect from='*' to='/404' />
           </Switch>
 
           <Footer />

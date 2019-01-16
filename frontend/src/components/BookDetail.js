@@ -26,6 +26,16 @@ export default class BookDetail extends Component {
       });
   }
 
+  delete = () => {
+    axios.delete(`http://127.0.0.1:8000/project/${this.state.project_id}/book/${this.state.book.id}/`)
+      .then(() => {
+        this.props.history.push(`/project/${this.state.project_id}/`);
+      })
+      .catch(error => {
+        console.log('Error deleting book', error)
+      });
+  }
+
   render() {
     let book = this.state.book;
 
@@ -50,6 +60,7 @@ export default class BookDetail extends Component {
               )
             }
           </div>
+          <button onClick={this.delete}>Delete</button>
         </main>
       </div>
     );

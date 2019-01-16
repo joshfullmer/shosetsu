@@ -87,6 +87,11 @@ footer.toolbar {
   grid-gap: 10px;
 }
 
+.project-elements {
+  display: grid;
+  grid-gap: 10px;
+}
+
 /* ====================================================== */
 /* Book List Layout */
 /* ====================================================== */
@@ -243,6 +248,11 @@ footer.toolbar {
   }
 
   .project-books {
+    grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+    grid-auto-rows: minmax(250px, auto);
+  }
+
+  .project-elements {
     grid-template-columns: repeat(auto-fit, minmax(200px, auto));
     grid-auto-rows: minmax(250px, auto);
   }

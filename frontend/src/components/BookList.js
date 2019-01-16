@@ -5,6 +5,7 @@ import BookCard from './BookCard';
 import Title from './Title';
 import Sidebar from './Sidebar';
 import Toolbar from './Toolbar';
+import AddBookModal from './AddBookModal';
 
 export default class BookList extends Component {
 
@@ -28,11 +29,16 @@ export default class BookList extends Component {
   }
 
   render() {
+
+    let title = this.state.loading ? "Loading..." : `Books for Project #${this.state.project_id}`
+
     return (
       <div className="booklist-body body">
-        <Title title={`Book List for Project #${this.state.project_id}`} />
+        <Title title={title} />
         <main className="booklist-container">
-          <h2>Books</h2>
+          <AddBookModal
+            {...this.props}
+          />
           <div className="booklist">
             {(this.state.loading)
               ? <p>Loading...</p>

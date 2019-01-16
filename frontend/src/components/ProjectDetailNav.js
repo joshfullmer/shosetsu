@@ -25,9 +25,14 @@ export default class ProjectDetailNav extends Component {
   render() {
     return (
       <div>
-        <h4>{this.state.loading
-              ? "Project Name Loading..."
-              : this.state.project.title}</h4>
+        <h4>
+          {this.state.loading
+            ? "Project Name Loading..."
+            : <NavLink to={`/project/${this.state.project.id}`}>
+                {this.state.project.title}
+              </NavLink>
+          }
+        </h4>
         <ul>
           <li>
             <NavLink to={`/project/${this.state.project.id}/book/`}>

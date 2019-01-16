@@ -70,6 +70,10 @@ footer.toolbar {
   background-color: darkolivegreen;
 }
 
+.element-card {
+  background-color: olivedrab;
+}
+
 .instance-data {
   border-collapse: collapse;
 }

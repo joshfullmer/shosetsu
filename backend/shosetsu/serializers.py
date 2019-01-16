@@ -97,7 +97,9 @@ class BookChapterListSerializer(serializers.ModelSerializer):
 
     def get_content_preview(self, obj):
         chapter = get_object_or_404(models.Chapter, pk=obj.id)
-        return chapter.content[0:100]
+        if chapter.content:
+            return chapter.content[0:100]
+        return ""
 
 
 class BookRetrieveSerializer(serializers.ModelSerializer):
@@ -193,7 +195,9 @@ class ChapterListSerializer(serializers.ModelSerializer):
 
     def get_content_preview(self, obj):
         chapter = get_object_or_404(models.Chapter, pk=obj.id)
-        return chapter.content[0:100]
+        if chapter.content:
+            return chapter.content[0:100]
+        return ""
 
 
 class ElementsFieldListSerializer(serializers.ModelSerializer):

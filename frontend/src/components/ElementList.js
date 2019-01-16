@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import Title from './Title';
 import InstanceList from './InstanceList';
+import AddElementModal from './AddElementModal';
 
 export default class ElementList extends Component {
 
@@ -31,6 +32,10 @@ export default class ElementList extends Component {
         <Title title="Elements" />
         <main className="elementlist-container">
           <h2>Elements</h2>
+          <AddElementModal
+            buttonClassName=""
+            {...this.props}
+          />
           {(this.state.loading)
             ? <p>Loading...</p>
             : this.state.elements.map(element => 

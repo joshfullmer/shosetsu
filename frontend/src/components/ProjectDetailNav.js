@@ -35,7 +35,7 @@ export default class ProjectDetailNav extends Component {
         </h4>
         <ul>
           <li>
-            <NavLink to={`/project/${this.state.project.id}/book/`}>
+            <NavLink to={`/project/${this.state.project.id}/book`}>
               Books
             </NavLink>
           </li>
@@ -43,7 +43,7 @@ export default class ProjectDetailNav extends Component {
             Outlines
           </li>
           <li>
-            <NavLink to={`/project/${this.state.project.id}/element/`}>
+            <NavLink to={`/project/${this.state.project.id}/element`}>
               Elements
             </NavLink>
             {this.state.project.elements && 

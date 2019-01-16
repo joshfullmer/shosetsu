@@ -19,7 +19,6 @@ export default class AddBookModal extends Component {
     }
     axios.post(`http://127.0.0.1:8000/project/${data.project_id}/book/`, data)
       .then(response => {
-        console.log(response);
         this.props.history.push(`/project/${data.project_id}/book/${response.data.id}`);
       })
       .catch(error => {

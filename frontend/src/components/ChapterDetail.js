@@ -22,7 +22,20 @@ export default class ChapterDetail extends Component {
         });
       })
       .catch(error => {
+        if (error.response.status === 404) {
+          this.props.history.push('/404')
+        }
         console.log('Error fetching chapter data', error);
+      });
+  }
+
+  delete = () => {
+    axios.delete(`http://127.0.0.1:8000/project/${this.props.match.params.project_id}/book/${this.props.match.params.book_id}/chapter/${this.state.chapter.id}/`)
+      .then(() => {
+        this.props.history.push(`/project/${this.props.match.params.project_id}/book/${this.props.match.params.book_id}/`);
+      })
+      .catch(error => {
+        console.log('Error deleting book', error)
       });
   }
 
@@ -35,6 +48,7 @@ export default class ChapterDetail extends Component {
         <div className="chapter-content">
           <main>
             <h2>Chapter Main</h2>
+            <button onClick={this.delete}>Delete</button>
             <p>{chapter.content}</p>
           </main>
           <Sidebar title={chapter.notes} />

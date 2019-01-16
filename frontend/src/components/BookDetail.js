@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 import Title from './Title';
 import ChapterCard from './ChapterCard';
+import AddChapterModal from './AddChapterModal';
 
 export default class BookDetail extends Component {
 
@@ -22,6 +23,9 @@ export default class BookDetail extends Component {
         });
       })
       .catch(error => {
+        if (error.response.status === 404) {
+          this.props.history.push('/404')
+        }
         console.log('Error fetching book data', error);
       });
   }
@@ -47,6 +51,10 @@ export default class BookDetail extends Component {
           <p>Title: {book.title}</p>
           <p>Description: {book.description}</p>
           <p>Project: {!this.state.loading && <NavLink to={`/project/${book.project.id}`}>{book.project.title}</NavLink>}</p>
+          <AddChapterModal
+            buttonClassName=""
+            {...this.props}
+          />
           <div className="book-chapters">
             {(this.state.loading)
               ? <p>Loading...</p>

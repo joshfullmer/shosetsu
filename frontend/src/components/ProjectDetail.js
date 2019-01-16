@@ -6,6 +6,7 @@ import Title from './Title';
 import BookCard from './BookCard';
 import ElementCard from './ElementCard';
 import AddBookModal from './AddBookModal';
+import AddElementModal from './AddElementModal';
 
 export default class ProjectDetail extends Component {
 
@@ -24,6 +25,9 @@ export default class ProjectDetail extends Component {
         });
       })
       .catch(error => {
+        if (error.response.status === 404) {
+          this.props.history.push('/404')
+        }
         console.log('Error fetching project data', error);
       });
   }
@@ -40,8 +44,12 @@ export default class ProjectDetail extends Component {
             buttonClassName=""
             {...this.props}
           />
+          <AddElementModal
+            buttonClassName=""
+            {...this.props}
+          />
           <p>{project.description}</p>
-          <NavLink to={`/project/${project.id}/book/`}>
+          <NavLink to={`/project/${project.id}/book`}>
             <header>Books</header>
           </NavLink>
           <div className="project-books">
@@ -56,7 +64,7 @@ export default class ProjectDetail extends Component {
                 )
             }
           </div>
-          <NavLink to={`/project/${project.id}/element/`}>
+          <NavLink to={`/project/${project.id}/element`}>
             <header>Elements</header>
           </NavLink>
           <div className="project-elements">
@@ -66,6 +74,7 @@ export default class ProjectDetail extends Component {
                   <ElementCard
                     project={project}
                     element={element}
+                    key={element.id}
                   />
                 )
             }

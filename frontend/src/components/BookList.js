@@ -5,7 +5,7 @@ import BookCard from './BookCard';
 import Title from './Title';
 import Sidebar from './Sidebar';
 import Toolbar from './Toolbar';
-import AddBookModal from './AddBookModal';
+import AddBookModal from './modals/AddBookModal';
 
 export default class BookList extends Component {
 

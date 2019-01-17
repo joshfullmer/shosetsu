@@ -5,8 +5,8 @@ import axios from 'axios';
 import Title from './Title';
 import BookCard from './BookCard';
 import ElementCard from './ElementCard';
-import AddBookModal from './AddBookModal';
-import AddElementModal from './AddElementModal';
+import AddBookModal from './modals/AddBookModal';
+import AddElementModal from './modals/AddElementModal';
 
 export default class ProjectDetail extends Component {
 

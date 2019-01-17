@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
-import Logo from './components/Logo';
+import Logo from './components/nav/Logo';
 import ProjectList from './components/ProjectList';
 import ProjectDetail from './components/ProjectDetail';
 import BookList from './components/BookList';
 import BookDetail from './components/BookDetail';
 import ChapterDetail from './components/ChapterDetail';
-import Footer from './components/Footer';
-import ProjectListNav from './components/ProjectListNav';
-import ProjectDetailNav from './components/ProjectDetailNav';
+import Footer from './components/nav/Footer';
+import ProjectListNav from './components/nav/ProjectListNav';
+import ProjectDetailNav from './components/nav/ProjectDetailNav';
 import ElementList from './components/ElementList'
 import ElementDetail from './components/ElementDetail';
 import NotFound from './components/NotFound';

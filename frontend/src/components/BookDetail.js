@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 import Title from './Title';
 import ChapterCard from './ChapterCard';
-import AddChapterModal from './AddChapterModal';
+import AddChapterModal from './modals/AddChapterModal';
 
 export default class BookDetail extends Component {
 

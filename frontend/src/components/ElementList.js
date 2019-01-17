@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import Title from './Title';
 import InstanceList from './InstanceList';
-import AddElementModal from './AddElementModal';
+import AddElementModal from './modals/AddElementModal';
 
 export default class ElementList extends Component {
 

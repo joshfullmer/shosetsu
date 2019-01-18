@@ -17,6 +17,7 @@ export default class InstanceList extends Component {
             <InstanceCard
               key={instance.id}
               instance={instance}
+              {...this.props}
             />
           )}
         </div>

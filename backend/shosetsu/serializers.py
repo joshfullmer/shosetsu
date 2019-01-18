@@ -1,7 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+import re
 from rest_framework import serializers
 from rest_framework.relations import reverse
+from slugify import slugify
 
 from . import models
 
@@ -346,9 +348,30 @@ class ElementFieldSerializer(serializers.ModelSerializer):
             'details',
             'element_id'
         )
+        read_only_fields = ('name',)
 
     def create(self, validated_data):
         validated_data['element'] = validated_data.pop('element_id')
+        slug_name = slugify(validated_data['label'], ok='_')
+
+        # Check if slug exists as a field name already
+        # If it does, increment number after slug
+        field_name = slug_name
+        while True:
+            field = models.ElementField.objects.filter(name=field_name)
+            if field.exists():
+                field_name = field.first().name
+                pattern = r'(.*?)(\d+)$'
+                m = re.match(pattern, field_name)
+                if m:
+                    num = int(m.group(2)) + 1
+                else:
+                    num = 0
+                field_name = f'{slug_name}{num}'
+            else:
+                validated_data['name'] = field_name
+                break
+
         return models.ElementField.objects.create(**validated_data)
 
 

@@ -200,6 +200,23 @@ footer.toolbar {
     "main";
 }
 
+/* ====================================================== */
+/* Instance Detail Layout */
+/* ====================================================== */
+
+.instance-container {
+  overflow: auto;
+}
+
+.instance-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: inherit;
+  grid-template-areas:
+    "title"
+    "main";
+}
+
 
 /* ====================================================== */
 /* Responsive Layout */
@@ -336,14 +353,27 @@ footer.toolbar {
 /* Element Detail Layout (mid-size) */
 /* ====================================================== */
 
-.element-body {
-  grid-template-columns: 1fr;
-  grid-template-rows: inherit;
-  grid-template-areas:
-    "title"
-    "main"
-    "main"
-}
+  .element-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: inherit;
+    grid-template-areas:
+      "title"
+      "main"
+      "main"
+  }
+
+/* ====================================================== */
+/* Element Detail Layout (mid-size) */
+/* ====================================================== */
+
+  .instance-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: inherit;
+    grid-template-areas:
+      "title"
+      "main"
+      "main"
+  }
 
 
 }

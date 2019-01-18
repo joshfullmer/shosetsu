@@ -34,6 +34,7 @@ export default class ElementList extends Component {
           <h2>Elements</h2>
           <AddElementModal
             buttonClassName=""
+            addElementToProject={this.props.addElementToProject}
             {...this.props}
           />
           {(this.state.loading)
@@ -42,6 +43,7 @@ export default class ElementList extends Component {
                 <InstanceList
                   key={element.id}
                   element={element}
+                  {...this.props}
                 />
               )
           }

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import axios from 'axios';
 
 import Title from './Title';
 import BookCard from './BookCard';
@@ -9,36 +8,13 @@ import AddBookModal from './modals/AddBookModal';
 import AddElementModal from './modals/AddElementModal';
 
 export default class ProjectDetail extends Component {
-
-  state = {
-    project: {id: this.props.match.params.project_id},
-    addBookModalIsOpen: false,
-    loading: true
-  };
-
-  componentDidMount() {
-    axios.get(`http://127.0.0.1:8000/project/${this.props.match.params.project_id}/`)
-      .then(response => {
-        this.setState({
-          project: response.data,
-          loading: false
-        });
-      })
-      .catch(error => {
-        if (error.response.status === 404) {
-          this.props.history.push('/404')
-        }
-        console.log('Error fetching project data', error);
-      });
-  }
-
   render() {
-    let project = this.state.project;
-    let title = this.state.loading ? "Loading..." : this.state.project.title;
+    let project = this.props.project;
+    let loading = Object.keys(project).length === 0;
 
     return (
       <div className="projectview-body body">
-        <Title title={title} />
+        <Title title={project.title} />
         <main className="projectview-container">
           <AddBookModal
             buttonClassName=""
@@ -53,7 +29,7 @@ export default class ProjectDetail extends Component {
             <header>Books</header>
           </NavLink>
           <div className="project-books">
-            {(this.state.loading)
+            {(loading)
               ? <p>Loading...</p>
               : project.books.map(book =>
                   <BookCard
@@ -68,7 +44,7 @@ export default class ProjectDetail extends Component {
             <header>Elements</header>
           </NavLink>
           <div className="project-elements">
-            {(this.state.loading)
+            {(loading)
               ? <p>Loading...</p>
               : project.elements.map(element => 
                   <ElementCard

@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { NavLink } from 'react-router-dom';
 
 import Title from './Title'
+import AddFieldModal from './modals/AddFieldModal';
+import AddInstanceModal from './modals/AddInstanceModal';
 
 export default class ElementDetail extends Component {
 
@@ -47,12 +50,28 @@ export default class ElementDetail extends Component {
 
   delete = () => {
     axios.delete(`http://127.0.0.1:8000/project/${this.state.project_id}/element/${this.state.element.id}/`)
-      .then(() => {
+      .then(response => {
+        this.props.removeElementFromProject({id: this.state.element.id})
         this.props.history.push(`/project/${this.state.project_id}/element`);
       })
       .catch(error => {
         console.log('Error deleting element', error)
       });
+  }
+
+  addField = field => {
+    this.setState(prevState => ({
+      fields: {
+        ...prevState.fields,
+        [field.name]: field.label
+      }
+    }))
+  }
+
+  addInstance = instance => {
+    this.setState(prevState => ({
+      instances: [...prevState.instances, instance]
+    }))
   }
 
   render() {
@@ -62,6 +81,17 @@ export default class ElementDetail extends Component {
         <Title title={title} />
         <main>
           <header>{title}</header>
+          <AddFieldModal 
+            buttonClassName=""
+            addField={this.addField}
+            {...this.props}
+          />
+          <AddInstanceModal
+            buttonClassName=""
+            addInstance={this.addInstance}
+            element={this.state.element}
+            {...this.props}
+          />
           <button onClick={this.delete}>Delete</button>
           {(this.state.loading)
             ? <p>Loading...</p>
@@ -77,7 +107,11 @@ export default class ElementDetail extends Component {
                 <tbody>
                   {this.state.instances.map(instance =>
                     <tr key={instance.id}>
-                      <td>{instance.name}</td>
+                      <td>
+                      <NavLink to={`/project/${this.state.project_id}/element/${this.state.element.id}/instance/${instance.id}`}>
+                        <div><header>{instance.name}</header></div>
+                      </NavLink>
+                      </td>
                       {Object.keys(this.state.fields).map(key =>
                         <td key={`${instance.id}.${key}`}>{instance[key]}</td>
                       )}

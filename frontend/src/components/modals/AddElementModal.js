@@ -17,6 +17,9 @@ export default class AddElementModal extends Component {
     }
     axios.post(`http://127.0.0.1:8000/project/${data.project_id}/element/`, data)
       .then(response => {
+        console.log(response.data)
+        this.props.addElementToProject(response.data)
+        console.log(`/project/${data.project_id}/element/${response.data.id}`)
         this.props.history.push(`/project/${data.project_id}/element/${response.data.id}`)
       })
       .catch(error => {

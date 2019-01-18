@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import Title from './Title';
-import Sidebar from './Sidebar';
-import Toolbar from './Toolbar';
+import ChapterDetailToolbar from './ChapterDetailToolbar';
+import ChapterDetailSidebar from './ChapterDetailSidebar';
 
 
 export default class ChapterDetail extends Component {
@@ -46,14 +46,12 @@ export default class ChapterDetail extends Component {
       <div className="chapter-body body">
         <Title title={`Chapter Title: ${chapter.title}`} />
         <div className="chapter-content">
-          <main>
-            <h2>Chapter Main</h2>
-            <button onClick={this.delete}>Delete</button>
-            <p>{chapter.content}</p>
+          <main className="chapter-editor" contentEditable>
+            {chapter.content}
           </main>
-          <Sidebar title={chapter.notes} />
+          <ChapterDetailSidebar chapter={chapter} />
         </div>
-        <Toolbar />
+        <ChapterDetailToolbar delete={this.delete} />
       </div>
     );
   }

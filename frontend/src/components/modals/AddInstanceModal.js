@@ -39,7 +39,7 @@ export default class AddInstanceModal extends Component {
 
   render() {
     return (
-      <div>
+      <>
         <button className={this.props.buttonClassName} onClick={this.openModal}>Add {this.props.element.name}</button>
         <Modal
           isOpen={this.state.modalIsOpen}
@@ -53,7 +53,7 @@ export default class AddInstanceModal extends Component {
             <button type="submit">Create Instance</button>
           </form>
         </Modal>
-      </div>
+      </>
     )
   }
 }

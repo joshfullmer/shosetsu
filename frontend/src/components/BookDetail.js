@@ -4,7 +4,8 @@ import { NavLink } from 'react-router-dom';
 
 import Title from './Title';
 import ChapterCard from './ChapterCard';
-import AddChapterModal from './modals/AddChapterModal';
+import BookDetailToolbar from './BookDetailToolbar';
+import BookDetailSidebar from './BookDetailSidebar';
 
 export default class BookDetail extends Component {
 
@@ -33,6 +34,7 @@ export default class BookDetail extends Component {
   delete = () => {
     axios.delete(`http://127.0.0.1:8000/project/${this.state.project_id}/book/${this.state.book.id}/`)
       .then(() => {
+        this.props.removeBookFromProject({id: this.state.book.id})
         this.props.history.push(`/project/${this.state.project_id}/`);
       })
       .catch(error => {
@@ -45,16 +47,10 @@ export default class BookDetail extends Component {
 
     return(
       <div className="bookview-body body">
-        <Title title={`Book View #${book.id}`} />
+        <Title title={(this.state.loading) ? "Loading..." : book.title} />
+        <BookDetailToolbar {...this.props} delete={this.delete}/>
         <main className="bookview-container">
-          <h2>Book view for Book #{book.id}</h2>
-          <p>Title: {book.title}</p>
-          <p>Description: {book.description}</p>
           <p>Project: {!this.state.loading && <NavLink to={`/project/${book.project.id}`}>{book.project.title}</NavLink>}</p>
-          <AddChapterModal
-            buttonClassName=""
-            {...this.props}
-          />
           <div className="book-chapters">
             {(this.state.loading)
               ? <p>Loading...</p>
@@ -68,8 +64,8 @@ export default class BookDetail extends Component {
               )
             }
           </div>
-          <button onClick={this.delete}>Delete</button>
         </main>
+        <BookDetailSidebar book={book} loading={this.state.loading} />
       </div>
     );
   }

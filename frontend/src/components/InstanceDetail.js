@@ -46,10 +46,8 @@ export default class InstanceDetail extends Component {
 
     return (
       <div className="instance-body body">
-        <Title title={`Element Instance View #${instance.id}`} />
+        <Title title={(this.state.loading) ? "Loading..." : instance.name} />
         <main className="instance-container">
-          <h2>Element view for Element #{instance.id}</h2>
-          <p>Name: {instance.name}</p>
           {(this.state.loading)
             ? <p>Loading...</p>
             : this.state.fields.map(field => 

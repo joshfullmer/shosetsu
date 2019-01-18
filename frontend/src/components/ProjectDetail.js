@@ -1,13 +1,25 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
+import axios from 'axios'
 
 import Title from './Title';
 import BookCard from './BookCard';
 import ElementCard from './ElementCard';
-import AddBookModal from './modals/AddBookModal';
-import AddElementModal from './modals/AddElementModal';
+import ProjectDetailToolbar from './ProjectDetailToolbar';
+import ProjectDetailSidebar from './ProjectDetailSidebar';
 
 export default class ProjectDetail extends Component {
+
+  delete = () => {
+    axios.delete(`http://127.0.0.1:8000/project/${this.props.match.params.project_id}/`)
+      .then(() => {
+        this.props.history.push(`/project`);
+      })
+      .catch(error => {
+        console.log('Error deleting project', error)
+      });
+  }
+
   render() {
     let project = this.props.project;
     let loading = Object.keys(project).length === 0;
@@ -15,16 +27,8 @@ export default class ProjectDetail extends Component {
     return (
       <div className="projectview-body body">
         <Title title={project.title} />
+        <ProjectDetailToolbar {...this.props} delete={this.delete} />
         <main className="projectview-container">
-          <AddBookModal
-            buttonClassName=""
-            {...this.props}
-          />
-          <AddElementModal
-            buttonClassName=""
-            {...this.props}
-          />
-          <p>{project.description}</p>
           <NavLink to={`/project/${project.id}/book`}>
             <header>Books</header>
           </NavLink>
@@ -56,6 +60,7 @@ export default class ProjectDetail extends Component {
             }
           </div>
         </main>
+        <ProjectDetailSidebar project={project}/>
       </div>
     );
   }

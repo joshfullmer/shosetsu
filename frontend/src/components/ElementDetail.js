@@ -3,8 +3,7 @@ import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 
 import Title from './Title'
-import AddFieldModal from './modals/AddFieldModal';
-import AddInstanceModal from './modals/AddInstanceModal';
+import ElementDetailToolbar from './ElementDetailToolbar';
 
 export default class ElementDetail extends Component {
 
@@ -79,20 +78,14 @@ export default class ElementDetail extends Component {
     return (
       <div className="element-body body">
         <Title title={title} />
+        <ElementDetailToolbar 
+          {...this.props}
+          addField={this.addField}
+          addInstance={this.addInstance}
+          element={this.state.element}
+          delete={this.delete}
+        />
         <main>
-          <header>{title}</header>
-          <AddFieldModal 
-            buttonClassName=""
-            addField={this.addField}
-            {...this.props}
-          />
-          <AddInstanceModal
-            buttonClassName=""
-            addInstance={this.addInstance}
-            element={this.state.element}
-            {...this.props}
-          />
-          <button onClick={this.delete}>Delete</button>
           {(this.state.loading)
             ? <p>Loading...</p>
             : <table className="instance-data">

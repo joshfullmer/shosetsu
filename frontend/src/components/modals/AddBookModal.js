@@ -19,6 +19,7 @@ export default class AddBookModal extends Component {
     }
     axios.post(`http://127.0.0.1:8000/project/${data.project_id}/book/`, data)
       .then(response => {
+        this.props.addBookToProject(response.data)
         this.props.history.push(`/project/${data.project_id}/book/${response.data.id}`);
       })
       .catch(error => {
@@ -44,7 +45,7 @@ export default class AddBookModal extends Component {
 
   render() {
     return (
-      <div>
+      <>
         <button className={this.props.buttonClassName} onClick={this.openModal}>Add Book</button>
         <Modal
           isOpen={this.state.modalIsOpen}
@@ -59,7 +60,7 @@ export default class AddBookModal extends Component {
             <button type="submit">Create Book</button>
           </form>
         </Modal>
-      </div>
+      </>
     );
   }
 }

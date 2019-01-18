@@ -3,9 +3,7 @@ import axios from 'axios';
 
 import BookCard from './BookCard';
 import Title from './Title';
-import Sidebar from './Sidebar';
-import Toolbar from './Toolbar';
-import AddBookModal from './modals/AddBookModal';
+import BookListToolbar from './BookListToolbar';
 
 export default class BookList extends Component {
 
@@ -35,10 +33,8 @@ export default class BookList extends Component {
     return (
       <div className="booklist-body body">
         <Title title={title} />
+        <BookListToolbar {...this.props} />
         <main className="booklist-container">
-          <AddBookModal
-            {...this.props}
-          />
           <div className="booklist">
             {(this.state.loading)
               ? <p>Loading...</p>
@@ -52,8 +48,6 @@ export default class BookList extends Component {
             }
           </div>
         </main>
-        <Sidebar />
-        <Toolbar />
       </div>
     );
   }

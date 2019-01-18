@@ -46,16 +46,16 @@ main {
   background-color: #aad2ed;  
 }
 
-aside {
+aside.sidebar {
   background-color: #6ad78a; 
+}
+
+aside.toolbar {
+  background-color: grey;
 }
 
 footer.footer {
   background-color: #6e859c;
-}
-
-footer.toolbar {
-  background-color: grey;
 }
 
 .book-card {

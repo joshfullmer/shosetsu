@@ -49,6 +49,30 @@ class App extends Component {
     }))
   }
 
+  // Handle books in state
+
+  addBookToProject = book => {
+    this.setState(prevState => ({
+      project: {
+        ...prevState.project,
+        books: [
+          ...prevState.project.books, book
+        ]
+      }
+    }))
+  }
+
+  removeBookFromProject = book => {
+    this.setState(prevState => ({
+      project: {
+        ...prevState.project,
+        books: prevState.project.books.filter(obj => (
+          obj.id !== book.id
+        ))
+      }
+    }))
+  }
+
   render() {
     return (
       <BrowserRouter>
@@ -66,9 +90,9 @@ class App extends Component {
           <Switch>
             <Route exact path='/' component={ProjectList} />
             <Route exact path='/project' component={ProjectList} />
-            <Route exact path='/project/:project_id(\d+)' render={props => <ProjectDetail {...props} project={this.state.project} addElementToProject={this.addElementToProject}/>} />
-            <Route exact path='/project/:project_id(\d+)/book' component={BookList} />
-            <Route exact path='/project/:project_id(\d+)/book/:book_id(\d+)' component={BookDetail} />
+            <Route exact path='/project/:project_id(\d+)' render={props => <ProjectDetail {...props} project={this.state.project} addElementToProject={this.addElementToProject} addBookToProject={this.addBookToProject} />} />
+            <Route exact path='/project/:project_id(\d+)/book' render={props => <BookList {...props} addBookToProject={this.addBookToProject} />} />
+            <Route exact path='/project/:project_id(\d+)/book/:book_id(\d+)' render={props => <BookDetail {...props} removeBookFromProject={this.removeBookFromProject} />} />
             <Route exact path='/project/:project_id(\d+)/book/:book_id(\d+)/chapter/:chapter_id(\d+)' component={ChapterDetail} />
             <Route exact path='/project/:project_id(\d+)/element' render={props => <ElementList {...props} addElementToProject={this.addElementToProject} />} />
             <Route exact path='/project/:project_id(\d+)/element/:element_id(\d+)' render={props => <ElementDetail {...props} key={props.match.params.element_id} removeElementFromProject={this.removeElementFromProject} />} />

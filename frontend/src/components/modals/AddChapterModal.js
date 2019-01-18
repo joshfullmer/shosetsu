@@ -38,7 +38,7 @@ export default class AddChapterModal extends Component {
 
   render() {
     return (
-      <div>
+      <>
         <button className={this.props.buttonClassName} onClick={this.openModal}>Add Chapter</button>
         <Modal
           isOpen={this.state.modalIsOpen}
@@ -52,7 +52,7 @@ export default class AddChapterModal extends Component {
             <button type="submit">Create Chapter</button>
           </form>
         </Modal>
-      </div>
+      </>
     );
   }
 }

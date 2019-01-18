@@ -44,7 +44,7 @@ export default class AddFieldModal extends Component {
 
   render() {
     return (
-      <div>
+      <>
         <button className={this.props.buttonClassName} onClick={this.openModal}>Add Field</button>
         <Modal
           isOpen={this.state.modalIsOpen}
@@ -62,7 +62,7 @@ export default class AddFieldModal extends Component {
             <button type="submit">Create Field</button>
           </form>
         </Modal>
-      </div>
+      </>
     )
   }
 }

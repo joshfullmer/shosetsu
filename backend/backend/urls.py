@@ -72,6 +72,6 @@ urlpatterns = [
     path('', include(project_router.urls)),
     path('', include(book_router.urls)),
     path('', include(element_router.urls)),
-    path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls'))
+    path('admin', admin.site.urls),
+    path('api-auth', include('rest_framework.urls'))
 ]

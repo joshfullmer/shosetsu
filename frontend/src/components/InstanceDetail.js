@@ -42,7 +42,6 @@ export default class InstanceDetail extends Component {
 
   render() {
     let instance = this.state.instance;
-    console.log(instance)
 
     return (
       <div className="instance-body body">

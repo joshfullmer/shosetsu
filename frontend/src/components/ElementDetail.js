@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 import Title from './Title'
 import ElementDetailToolbar from './ElementDetailToolbar';
+import InlineEditText from './inline-edit/InlineEditText';
 
 export default class ElementDetail extends Component {
 
@@ -56,6 +57,20 @@ export default class ElementDetail extends Component {
       .catch(error => {
         console.log('Error deleting element', error)
       });
+  }
+
+  updateElementName = name => {
+    let data = {
+      id: this.state.element.id,
+      name: name
+    }
+    axios.patch(`http://127.0.0.1:8000/project/${this.state.project_id}/element/${this.state.element.id}/`, data)
+      .then(response => {
+        console.log(response)
+      })
+      .catch(error => {
+        console.log('Error updating element name', error)
+      })
   }
 
   addField = field => {
@@ -112,6 +127,14 @@ export default class ElementDetail extends Component {
                   )}
                 </tbody>
               </table>
+          }
+          {!this.state.loading
+            &&
+            <InlineEditText 
+              tag="h1"
+              initialValue={this.state.element.name}
+              handleSave={this.updateElementName}
+            />
           }
         </main>
       </div>

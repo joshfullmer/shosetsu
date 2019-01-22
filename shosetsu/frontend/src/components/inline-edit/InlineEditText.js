@@ -3,15 +3,10 @@ import React, { Component } from 'react'
 export default class InlineEditText extends Component {
 
   state = {
-    editable: false,
-    value: undefined
+    editable: false
   }
 
   text = React.createRef()
-
-  componentDidMount() {
-    this.setState({value: this.props.initialValue})
-  }
 
   canEdit = () => {
     this.setState(
@@ -22,13 +17,8 @@ export default class InlineEditText extends Component {
   }
 
   canNotEdit = e => {
-    this.setState(
-      {
-        editable: false,
-        value: e.target.innerText
-      },
-      () => this.props.handleSave(this.state.value)
-    )
+    this.setState({editable: false})
+    this.props.handleSave(e.target.innerText)
   }
 
   handleKeyDown = e => {
@@ -50,7 +40,7 @@ export default class InlineEditText extends Component {
         contentEditable={this.state.editable}
         onKeyDown={this.handleKeyDown}
       >
-        {this.state.value || this.props.initialValue}
+        {this.props.initialValue}
       </Tag>
     )
   }

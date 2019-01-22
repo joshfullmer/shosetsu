@@ -2,13 +2,27 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios'
 
-import Title from './Title';
 import BookCard from './BookCard';
 import ElementCard from './ElementCard';
 import ProjectDetailToolbar from './ProjectDetailToolbar';
 import ProjectDetailSidebar from './ProjectDetailSidebar';
+import ProjectDetailBreadcrumbs from './breadcrumbs/ProjectDetailBreadcrumbs';
 
 export default class ProjectDetail extends Component {
+
+  rename = title => {
+    let data = {
+      id: this.props.match.params.project_id,
+      title: title
+    }
+    axios.patch(`http://127.0.0.1:8000/api/project/${this.props.match.params.project_id}/`, data)
+      .then(() => {
+        this.props.renameProject(data.title)
+      })
+      .catch(error => {
+        console.log('Error renaming project', error)
+      })
+  }
 
   delete = () => {
     axios.delete(`http://127.0.0.1:8000/api/project/${this.props.match.params.project_id}/`)
@@ -26,7 +40,10 @@ export default class ProjectDetail extends Component {
 
     return (
       <div className="projectview-body body">
-        <Title title={project.title} />
+        <ProjectDetailBreadcrumbs
+          project={project}
+          rename={this.rename}
+        />
         <ProjectDetailToolbar {...this.props} delete={this.delete} />
         <main className="projectview-container">
           <NavLink to={`/project/${project.id}/book`}>

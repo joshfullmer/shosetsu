@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import { NavLink } from 'react-router-dom';
+import React, { Component } from 'react'
+import axios from 'axios'
+import { NavLink } from 'react-router-dom'
 
-import Title from './Title'
-import ElementDetailToolbar from './ElementDetailToolbar';
-import InlineEditText from './inline-edit/InlineEditText';
+import ElementDetailToolbar from './ElementDetailToolbar'
+import ElementDetailBreadcrumbs from './breadcrumbs/ElementDetailBreadcrumbs'
 
 export default class ElementDetail extends Component {
 
@@ -16,41 +15,33 @@ export default class ElementDetail extends Component {
   }
 
   componentDidMount() {
-    axios.get(`http://127.0.0.1:8000/api/project/${this.state.project_id}/element/${this.state.element.id}/`)
-      .then(response => {
-        let fields = response.data.element_fields.reduce((map, field) => {
+    axios.all([
+      axios.get(`http://127.0.0.1:8000/api/project/${this.state.project_id}/element/${this.state.element.id}/`),
+      axios.get(`http://127.0.0.1:8000/api/project/${this.state.project_id}/element/${this.state.element.id}/instance/`),
+    ])
+      .then(axios.spread((element, instances) => {
+        let fields = element.data.element_fields.reduce((map, field) => {
           map[field.name] = field.label;
           return map;
         }, {});
         this.setState({
-          element: response.data,
-          fields: fields
+          element: element.data,
+          fields: fields,
+          instances: instances.data,
+          loading: false
         })
-      })
+      }))
       .catch(error => {
-        if (error.response.status === 404) {
+        if (error.response && error.response.status === 404) {
           this.props.history.push('/404')
         }
-        console.log('Error fetching and parsing element data', error)
-      });
-    axios.get(`http://127.0.0.1:8000/api/project/${this.state.project_id}/element/${this.state.element.id}/instance/`)
-    .then(response => {
-      this.setState({
-        instances: response.data,
-        loading: false
+        console.log('Error fetching and parsing element/instance data', error)
       })
-    })
-    .catch(error => {
-      if (error.response.status === 404) {
-        this.props.history.push('/404')
-      }
-      console.log('Error fetching and parsing instance data', error)
-    });
   }
 
   delete = () => {
     axios.delete(`http://127.0.0.1:8000/api/project/${this.state.project_id}/element/${this.state.element.id}/`)
-      .then(response => {
+      .then(() => {
         this.props.removeElementFromProject({id: this.state.element.id})
         this.props.history.push(`/project/${this.state.project_id}/element`);
       })
@@ -64,10 +55,14 @@ export default class ElementDetail extends Component {
       id: this.state.element.id,
       name: name
     }
-    console.log(data)
     axios.patch(`http://127.0.0.1:8000/api/project/${this.state.project_id}/element/${this.state.element.id}/`, data)
-      .then(response => {
-        console.log(response)
+      .then(() => {
+        this.setState(prevState => ({
+          element: {
+            ...prevState.element,
+            name: data.name
+          }
+        }), this.props.updateElementName(data))
       })
       .catch(error => {
         console.log('Error updating element name', error)
@@ -90,10 +85,13 @@ export default class ElementDetail extends Component {
   }
 
   render() {
-    let title = (this.state.loading) ? "Loading..." : this.state.element.name;
     return (
       <div className="element-body body">
-        <Title title={title} />
+        <ElementDetailBreadcrumbs
+          element={this.state.element}
+          updateElementName={this.updateElementName}
+          loading={this.state.loading}
+        />
         <ElementDetailToolbar 
           {...this.props}
           addField={this.addField}
@@ -101,6 +99,7 @@ export default class ElementDetail extends Component {
           element={this.state.element}
           delete={this.delete}
         />
+        {/* TODO: split the table into different components */}
         <main>
           {(this.state.loading)
             ? <p>Loading...</p>
@@ -128,14 +127,6 @@ export default class ElementDetail extends Component {
                   )}
                 </tbody>
               </table>
-          }
-          {!this.state.loading
-            &&
-            <InlineEditText 
-              tag="h1"
-              initialValue={this.state.element.name}
-              handleSave={this.updateElementName}
-            />
           }
         </main>
       </div>

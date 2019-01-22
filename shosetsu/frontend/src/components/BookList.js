@@ -4,6 +4,7 @@ import axios from 'axios';
 import BookCard from './BookCard';
 import Title from './Title';
 import BookListToolbar from './BookListToolbar';
+import BookListBreadcrumbs from './breadcrumbs/BookListBreadcrumbs';
 
 export default class BookList extends Component {
 
@@ -32,7 +33,10 @@ export default class BookList extends Component {
 
     return (
       <div className="booklist-body body">
-        <Title title={title} />
+        <BookListBreadcrumbs
+          books={this.state.books}
+          loading={this.state.loading}
+        />
         <BookListToolbar {...this.props} />
         <main className="booklist-container">
           <div className="booklist">

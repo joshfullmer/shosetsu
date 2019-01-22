@@ -9,7 +9,7 @@ export default class InstanceList extends Component {
 
     return (
       <div>
-        <NavLink to={`/project/${element.project_id}/element/${element.id}`}>
+        <NavLink to={`/project/${element.project.id}/element/${element.id}`}>
           <header>{element.name}</header>
         </NavLink>
         <div className="elementlist">

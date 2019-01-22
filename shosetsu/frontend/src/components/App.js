@@ -27,6 +27,15 @@ class App extends Component {
     this.setState({project: project})
   }
 
+  renameProject = title => {
+    this.setState(prevState => ({
+      project: {
+        ...prevState.project,
+        title: title
+      }
+    }))
+  }
+
   addElementToProject = element => {
     this.setState(prevState => ({
       project: {
@@ -73,6 +82,18 @@ class App extends Component {
     }))
   }
 
+  updateElementName = element => {
+    let elementIndex = this.state.project.elements.findIndex(e => e.id === element.id)
+    let updatedElements = [...this.state.project.elements]
+    updatedElements[elementIndex] = element
+    this.setState(prevState => ({
+      project: {
+        ...prevState.project,
+        elements: updatedElements
+      }
+    }))
+  }
+
   render() {
     return (
       <BrowserRouter>
@@ -90,12 +111,12 @@ class App extends Component {
           <Switch>
             <Route exact path='/' component={ProjectList} />
             <Route exact path='/project' component={ProjectList} />
-            <Route exact path='/project/:project_id(\d+)' render={props => <ProjectDetail {...props} project={this.state.project} addElementToProject={this.addElementToProject} addBookToProject={this.addBookToProject} />} />
+            <Route exact path='/project/:project_id(\d+)' render={props => <ProjectDetail {...props} project={this.state.project} addElementToProject={this.addElementToProject} addBookToProject={this.addBookToProject} renameProject={this.renameProject} />} />
             <Route exact path='/project/:project_id(\d+)/book' render={props => <BookList {...props} addBookToProject={this.addBookToProject} />} />
             <Route exact path='/project/:project_id(\d+)/book/:book_id(\d+)' render={props => <BookDetail {...props} removeBookFromProject={this.removeBookFromProject} />} />
             <Route exact path='/project/:project_id(\d+)/book/:book_id(\d+)/chapter/:chapter_id(\d+)' component={ChapterDetail} />
             <Route exact path='/project/:project_id(\d+)/element' render={props => <ElementList {...props} addElementToProject={this.addElementToProject} />} />
-            <Route exact path='/project/:project_id(\d+)/element/:element_id(\d+)' render={props => <ElementDetail {...props} key={props.match.params.element_id} removeElementFromProject={this.removeElementFromProject} />} />
+            <Route exact path='/project/:project_id(\d+)/element/:element_id(\d+)' render={props => <ElementDetail {...props} key={props.match.params.element_id} removeElementFromProject={this.removeElementFromProject} updateElementName={this.updateElementName} />} />
             <Route exact path='/project/:project_id(\d+)/element/:element_id(\d+)/instance/:instance_id(\d+)' component={InstanceDetail} />
             <Route exact path='/404' component={NotFound} />
             <Redirect from='*' to='/404' />

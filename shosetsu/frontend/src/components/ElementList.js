@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import Title from './Title';
 import InstanceList from './InstanceList';
 import ElementListToolbar from './ElementListToolbar';
+import ElementListBreadcrumbs from './breadcrumbs/ElementListBreadcrumbs';
 
 export default class ElementList extends Component {
 
@@ -29,7 +29,10 @@ export default class ElementList extends Component {
   render() {
     return (
       <div className="elementlist-body body">
-        <Title title="Elements" />
+        <ElementListBreadcrumbs
+          elements={this.state.elements}
+          loading={this.state.loading}
+        />
         <ElementListToolbar {...this.props} />
         <main className="elementlist-container">
           {(this.state.loading)

@@ -8,14 +8,14 @@ export default class ElementDetailToolbar extends Component {
     return (
       <aside className="toolbar">
         <AddFieldModal 
-            buttonClassName=""
-            {...this.props}
-          />
-          <AddInstanceModal
-            buttonClassName=""
-            {...this.props}
-          />
-          <button onClick={this.delete}>Delete</button>
+          buttonClassName=""
+          {...this.props}
+        />
+        <AddInstanceModal
+          buttonClassName=""
+          {...this.props}
+        />
+        <button onClick={this.props.delete}>Delete</button>
       </aside>
     )
   }

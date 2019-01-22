@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { NavLink } from 'react-router-dom';
 
-import Title from './Title';
 import ChapterCard from './ChapterCard';
 import BookDetailToolbar from './BookDetailToolbar';
 import BookDetailSidebar from './BookDetailSidebar';
+import BookDetailBreadcrumbs from './breadcrumbs/BookDetailBreadcrumbs';
 
 export default class BookDetail extends Component {
 
@@ -31,6 +30,26 @@ export default class BookDetail extends Component {
       });
   }
 
+  rename = title => {
+    let book = this.state.book
+    let data = {
+      id: book.project.id,
+      title: title
+    }
+    axios.patch(`http://127.0.0.1:8000/api/project/${book.project.id}/book/${book.id}/`, data)
+      .then(() => {
+        this.setState(prevState => ({
+          book: {
+            ...prevState.book,
+            title: title
+          }
+        }))
+      })
+      .catch(error => {
+        console.log('Error renaming book', error)
+      })
+  }
+
   delete = () => {
     axios.delete(`http://127.0.0.1:8000/api/project/${this.state.project_id}/book/${this.state.book.id}/`)
       .then(() => {
@@ -47,10 +66,13 @@ export default class BookDetail extends Component {
 
     return(
       <div className="bookview-body body">
-        <Title title={(this.state.loading) ? "Loading..." : book.title} />
+        <BookDetailBreadcrumbs
+          book={book}
+          rename={this.rename}
+          loading={this.state.loading}
+        />
         <BookDetailToolbar {...this.props} delete={this.delete}/>
         <main className="bookview-container">
-          <p>Project: {!this.state.loading && <NavLink to={`/project/${book.project.id}`}>{book.project.title}</NavLink>}</p>
           <div className="book-chapters">
             {(this.state.loading)
               ? <p>Loading...</p>
@@ -65,6 +87,7 @@ export default class BookDetail extends Component {
             }
           </div>
         </main>
+        {/* TODO: update sidebar to edit description */}
         <BookDetailSidebar book={book} loading={this.state.loading} />
       </div>
     );

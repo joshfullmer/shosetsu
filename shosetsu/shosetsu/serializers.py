@@ -431,4 +431,12 @@ class ElementValueSerializer(serializers.ModelSerializer):
         validated_data['element_field'] = validated_data.pop(
             'element_field_id'
         )
-        return models.ElementValue.objects.create(**validated_data)
+        element_instance = validated_data['element_instance']
+        element_field = validated_data['element_field']
+        value = validated_data['value']
+        element_value, _ = models.ElementValue.objects.update_or_create(
+            element_instance=element_instance,
+            element_field=element_field,
+            defaults={'value': value}
+        )
+        return element_value

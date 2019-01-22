@@ -8,6 +8,10 @@ export default class InlineEditText extends Component {
 
   text = React.createRef()
 
+  // Emulate state
+  // Can't have state handle the value
+  value = this.props.initialValue
+
   canEdit = () => {
     this.setState(
       {editable: true},
@@ -17,8 +21,11 @@ export default class InlineEditText extends Component {
   }
 
   canNotEdit = e => {
+    if (e.target.innerText !== this.value) {
+      this.props.handleSave(e.target.innerText)
+    }
+    this.value = e.target.innerText
     this.setState({editable: false})
-    this.props.handleSave(e.target.innerText)
   }
 
   handleKeyDown = e => {
@@ -38,9 +45,10 @@ export default class InlineEditText extends Component {
         onClick={this.canEdit}
         onBlur={this.canNotEdit}
         contentEditable={this.state.editable}
+        suppressContentEditableWarning={true}
         onKeyDown={this.handleKeyDown}
       >
-        {this.props.initialValue}
+        {this.value}
       </Tag>
     )
   }

@@ -28,9 +28,6 @@ export default class BookList extends Component {
   }
 
   render() {
-
-    let title = this.state.loading ? "Loading..." : `Books for Project #${this.state.project_id}`
-
     return (
       <div className="booklist-body body">
         <BookListBreadcrumbs

@@ -92,3 +92,6 @@ class ElementValue(models.Model):
         on_delete=models.CASCADE
     )
     value = models.TextField()
+
+    class Meta:
+        unique_together = ('element_instance', 'element_field')

@@ -15,7 +15,7 @@ export default class ElementDetailToolbar extends Component {
           buttonClassName=""
           {...this.props}
         />
-        <button onClick={this.props.delete}>Delete</button>
+        <button onClick={this.props.deleteElement}>Delete Element</button>
       </aside>
     )
   }

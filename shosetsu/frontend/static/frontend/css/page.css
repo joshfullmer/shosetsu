@@ -91,3 +91,8 @@ div.body {
 .body > * {
   padding: 0.85em;
 }
+
+/* Chapter Editor */
+.chapter-editor {
+  white-space: pre-line;
+}

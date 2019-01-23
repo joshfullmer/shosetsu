@@ -45,7 +45,7 @@ export default class ElementDetail extends Component {
       })
   }
 
-  delete = () => {
+  deleteElement = () => {
     axios.delete(`http://127.0.0.1:8000/api/project/${this.state.project_id}/element/${this.state.element.id}/`)
       .then(() => {
         this.props.removeElementFromProject({id: this.state.element.id})
@@ -90,6 +90,18 @@ export default class ElementDetail extends Component {
     }))
   }
 
+  deleteInstance = instanceToDelete => {
+    axios.delete(`http://127.0.0.1:8000/api/project/${this.state.project_id}/element/${this.state.element.id}/instance/${instanceToDelete.id}/`)
+      .then(() => {
+        this.setState(prevState => ({
+          instances: prevState.instances.filter(instance => instance.id !== instanceToDelete.id)
+        }))
+      })
+      .catch(error => {
+        console.log('Error deleting element instance', error)
+      });
+  }
+
   updateFieldValue = (value, element_instance_id, field_name) => {
     let element_field_id = this.state.field_ids[field_name]
     let data = {
@@ -119,7 +131,7 @@ export default class ElementDetail extends Component {
           addField={this.addField}
           addInstance={this.addInstance}
           element={this.state.element}
-          delete={this.delete}
+          deleteElement={this.deleteElement}
         />
         {/* TODO: split the table into different components */}
         <main>
@@ -128,6 +140,7 @@ export default class ElementDetail extends Component {
             : <table className="instance-data">
                 <thead>
                   <tr>
+                    <th>X</th>
                     <th>Name</th>
                     {Object.keys(this.state.fields).map(key => 
                       <th key={key}>{this.state.fields[key]}</th>
@@ -138,9 +151,12 @@ export default class ElementDetail extends Component {
                   {this.state.instances.map(instance =>
                     <tr key={instance.id}>
                       <td>
-                      <NavLink to={`/project/${this.state.project_id}/element/${this.state.element.id}/instance/${instance.id}`}>
-                        <div><header>{instance.name}</header></div>
-                      </NavLink>
+                        <button onClick={() => this.deleteInstance(instance)}>Delete</button>
+                      </td>
+                      <td>
+                        <NavLink to={`/project/${this.state.project_id}/element/${this.state.element.id}/instance/${instance.id}`}>
+                          <div><header>{instance.name}</header></div>
+                        </NavLink>
                       </td>
                       {Object.keys(this.state.fields).map(key =>
                           <InlineEditText

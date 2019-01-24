@@ -3,11 +3,7 @@ import { NavLink } from 'react-router-dom'
 
 export default class ElementListBreadcrumbs extends Component {
   render() {
-    let elements = this.props.elements;
-    let project;
-    if (elements !== undefined && elements.length > 0) {
-      project = elements[0].project
-    }
+    let project = this.props.project;
 
     return (
       <header className="title">

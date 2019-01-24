@@ -1,7 +1,15 @@
 from django.db import models
 
 
-class Project(models.Model):
+class BaseModel(models.Model):
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class Project(BaseModel):
     title = models.CharField(max_length=100)
     description = models.TextField()
 
@@ -9,7 +17,7 @@ class Project(models.Model):
         return self.title
 
 
-class Book(models.Model):
+class Book(BaseModel):
     project = models.ForeignKey(
         Project,
         related_name='books',
@@ -22,7 +30,7 @@ class Book(models.Model):
         return self.title
 
 
-class Chapter(models.Model):
+class Chapter(BaseModel):
     book = models.ForeignKey(
         Book,
         related_name='chapters',
@@ -36,7 +44,7 @@ class Chapter(models.Model):
         return self.title
 
 
-class Element(models.Model):
+class Element(BaseModel):
     name = models.CharField(max_length=100)
     project = models.ForeignKey(
         Project,
@@ -48,7 +56,7 @@ class Element(models.Model):
         return self.name
 
 
-class ElementInstance(models.Model):
+class ElementInstance(BaseModel):
     name = models.CharField(max_length=100)
     project = models.ForeignKey(
         Project,
@@ -65,7 +73,7 @@ class ElementInstance(models.Model):
         return self.name
 
 
-class ElementField(models.Model):
+class ElementField(BaseModel):
     element = models.ForeignKey(
         Element,
         related_name='element_fields',
@@ -80,7 +88,7 @@ class ElementField(models.Model):
         return self.label
 
 
-class ElementValue(models.Model):
+class ElementValue(BaseModel):
     element_instance = models.ForeignKey(
         ElementInstance,
         related_name='element_values',

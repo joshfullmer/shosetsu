@@ -9,28 +9,33 @@ export default class ElementList extends Component {
 
   state = {
     elements: [],
-    project_id: this.props.match.params.project_id,
+    project: {id: this.props.match.params.project_id},
     loading: true
   }
 
   componentDidMount() {
-    axios.get(`http://127.0.0.1:8000/api/project/${this.state.project_id}/element/`)
+    axios.get(`http://127.0.0.1:8000/api/project/${this.state.project.id}/element/`)
       .then(response => {
         this.setState({
-          elements: response.data,
+          elements: response.data.elements,
+          project: response.data.project,
           loading: false
         })
       })
       .catch(error => {
+        if (error.response && error.response.status === 404) {
+          this.props.history.push('/404')
+        }
         console.log('Error fetching and parsing element data', error)
-      });
+      })
   }
 
   render() {
+    let project = this.state.project
     return (
       <div className="elementlist-body body">
         <ElementListBreadcrumbs
-          elements={this.state.elements}
+          project={this.state.project}
           loading={this.state.loading}
         />
         <ElementListToolbar {...this.props} />
@@ -40,6 +45,7 @@ export default class ElementList extends Component {
             : this.state.elements.map(element => 
                 <InstanceList
                   key={element.id}
+                  project={project}
                   element={element}
                   {...this.props}
                 />

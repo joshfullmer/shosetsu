@@ -11,14 +11,15 @@ export default class ElementDetail extends Component {
   state = {
     element: {id: this.props.match.params.element_id},
     fields: [],
-    project_id: this.props.match.params.project_id,
+    instances: [],
+    project: {id: this.props.match.params.project_id},
     loading: true
   }
 
   componentDidMount() {
     axios.all([
-      axios.get(`http://127.0.0.1:8000/api/project/${this.state.project_id}/element/${this.state.element.id}/`),
-      axios.get(`http://127.0.0.1:8000/api/project/${this.state.project_id}/element/${this.state.element.id}/instance/`),
+      axios.get(`http://127.0.0.1:8000/api/project/${this.state.project.id}/element/${this.state.element.id}/`),
+      axios.get(`http://127.0.0.1:8000/api/project/${this.state.project.id}/element/${this.state.element.id}/instance/`),
     ])
       .then(axios.spread((element, instances) => {
         let fields = element.data.element_fields.reduce((map, field) => {
@@ -32,7 +33,8 @@ export default class ElementDetail extends Component {
         this.setState({
           element: element.data,
           fields: fields,
-          instances: instances.data,
+          instances: instances.data.instances,
+          project: instances.data.project,
           field_ids: field_ids,
           loading: false
         })
@@ -46,10 +48,10 @@ export default class ElementDetail extends Component {
   }
 
   deleteElement = () => {
-    axios.delete(`http://127.0.0.1:8000/api/project/${this.state.project_id}/element/${this.state.element.id}/`)
+    axios.delete(`http://127.0.0.1:8000/api/project/${this.state.project.id}/element/${this.state.element.id}/`)
       .then(() => {
         this.props.removeElementFromProject({id: this.state.element.id})
-        this.props.history.push(`/project/${this.state.project_id}/element`);
+        this.props.history.push(`/project/${this.state.project.id}/element`);
       })
       .catch(error => {
         console.log('Error deleting element', error)
@@ -61,7 +63,7 @@ export default class ElementDetail extends Component {
       id: this.state.element.id,
       name: name
     }
-    axios.patch(`http://127.0.0.1:8000/api/project/${this.state.project_id}/element/${this.state.element.id}/`, data)
+    axios.patch(`http://127.0.0.1:8000/api/project/${this.state.project.id}/element/${this.state.element.id}/`, data)
       .then(() => {
         this.setState(prevState => ({
           element: {
@@ -91,7 +93,7 @@ export default class ElementDetail extends Component {
   }
 
   deleteInstance = instanceToDelete => {
-    axios.delete(`http://127.0.0.1:8000/api/project/${this.state.project_id}/element/${this.state.element.id}/instance/${instanceToDelete.id}/`)
+    axios.delete(`http://127.0.0.1:8000/api/project/${this.state.project.id}/element/${this.state.element.id}/instance/${instanceToDelete.id}/`)
       .then(() => {
         this.setState(prevState => ({
           instances: prevState.instances.filter(instance => instance.id !== instanceToDelete.id)
@@ -122,6 +124,7 @@ export default class ElementDetail extends Component {
     return (
       <div className="element-body body">
         <ElementDetailBreadcrumbs
+          project={this.state.project}
           element={this.state.element}
           updateElementName={this.updateElementName}
           loading={this.state.loading}
@@ -154,7 +157,7 @@ export default class ElementDetail extends Component {
                         <button onClick={() => this.deleteInstance(instance)}>Delete</button>
                       </td>
                       <td>
-                        <NavLink to={`/project/${this.state.project_id}/element/${this.state.element.id}/instance/${instance.id}`}>
+                        <NavLink to={`/project/${this.state.project.id}/element/${this.state.element.id}/instance/${instance.id}`}>
                           <div><header>{instance.name}</header></div>
                         </NavLink>
                       </td>

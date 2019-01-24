@@ -4,8 +4,8 @@ import InlineEditText from '../inline-edit/InlineEditText';
 
 export default class ElementDetailBreadcrumbs extends Component {
   render() {
+    let project = this.props.project
     let element = this.props.element
-    let project = element.project
     return (
       <header className="title">
         {(this.props.loading)

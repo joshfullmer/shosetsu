@@ -27,6 +27,15 @@ class BookViewSet(viewsets.ModelViewSet):
             return serializers.BookListSerializer
         return serializers.BookRetrieveSerializer
 
+    def list(self, request, *args, **kwargs):
+        response = super(BookViewSet, self).list(request, *args, **kwargs)
+        project = models.Project.objects.get(id=kwargs['project_pk'])
+        response.data = {
+            'books': response.data,
+            'project': serializers.ProjectNestedSerializer(project).data
+        }
+        return response
+
 
 class ChapterViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
@@ -47,6 +56,15 @@ class ElementViewSet(viewsets.ModelViewSet):
             return serializers.ElementListSerializer
         return serializers.ElementRetrieveSerializer
 
+    def list(self, request, *args, **kwargs):
+        response = super(ElementViewSet, self).list(request, *args, **kwargs)
+        project = models.Project.objects.get(id=kwargs['project_pk'])
+        response.data = {
+            'elements': response.data,
+            'project': serializers.ProjectNestedSerializer(project).data
+        }
+        return response
+
 
 class ElementInstanceViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
@@ -55,6 +73,21 @@ class ElementInstanceViewSet(viewsets.ModelViewSet):
         )
 
     serializer_class = serializers.ElementInstanceSerializer
+
+    def list(self, request, *args, **kwargs):
+        response = super(ElementInstanceViewSet, self).list(
+            request,
+            *args,
+            **kwargs
+        )
+        project = models.Project.objects.get(id=kwargs['project_pk'])
+        element = models.Element.objects.get(id=kwargs['element_pk'])
+        response.data = {
+            'instances': response.data,
+            'element': serializers.ElementNestedSerializer(element).data,
+            'project': serializers.ProjectNestedSerializer(project).data,
+        }
+        return response
 
 
 class ElementFieldViewSet(viewsets.ModelViewSet):

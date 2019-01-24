@@ -8,6 +8,10 @@ from slugify import slugify
 from . import models
 
 
+###############################################################################
+# Nested Serializers                                                          #
+###############################################################################
+
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
@@ -24,34 +28,119 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ProjectBooksSerializer(serializers.ModelSerializer):
+class ProjectNestedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Project
+        fields = '__all__'
+
+
+class BookNestedSerializer(serializers.ModelSerializer):
+    book_url = serializers.SerializerMethodField()
+
     class Meta:
         model = models.Book
-        fields = ('id', 'title', 'description')
+        fields = (
+            'id',
+            'title',
+            'description',
+            'book_url',
+            'created_date',
+            'modified_date',
+        )
+
+    def get_book_url(self, obj):
+        request = self.context.get('request')
+        endpoint = reverse(
+            'book-detail',
+            kwargs={'project_pk': obj.project.pk,
+                    'pk': obj.pk},
+            request=request
+        )
+        return endpoint
 
 
-class ProjectElementsSerializer(serializers.ModelSerializer):
+class ChapterNestedSerializer(serializers.ModelSerializer):
+    content_preview = serializers.SerializerMethodField()
+    chapter_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Chapter
+        fields = (
+            'id',
+            'title',
+            'notes',
+            'content_preview',
+            'chapter_url',
+            'created_date',
+            'modified_date',
+        )
+
+    def get_content_preview(self, obj):
+        chapter = get_object_or_404(models.Chapter, pk=obj.id)
+        if chapter.content:
+            return chapter.content[0:100]
+        return ""
+
+    def get_chapter_url(self, obj):
+        request = self.context.get('request')
+        endpoint = reverse(
+            'chapter-detail',
+            kwargs={'project_pk': obj.book.project.pk,
+                    'book_pk': obj.book.pk,
+                    'pk': obj.pk},
+            request=request
+        )
+        return endpoint
+
+
+class ElementNestedSerializer(serializers.ModelSerializer):
+    element_url = serializers.SerializerMethodField()
+
     class Meta:
         model = models.Element
+        fields = (
+            'id',
+            'name',
+            'element_url',
+            'created_date',
+            'modified_date',
+        )
+
+    def get_element_url(self, obj):
+        request = self.context.get('request')
+        endpoint = reverse(
+            'element-detail',
+            kwargs={'pk': obj.pk, 'project_pk': obj.project.pk},
+            request=request
+        )
+        return endpoint
+
+
+class ElementsFieldNestedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ElementField
+        fields = (
+            'id',
+            'label',
+            'name',
+            'type',
+            'details',
+            'element_id'
+        )
+
+
+class ElementInstanceNestedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ElementInstance
         fields = (
             'id',
             'name'
         )
 
 
-class ProjectRetrieveSerializer(serializers.ModelSerializer):
-    books = ProjectBooksSerializer(
-        many=True,
-        read_only=True
-    )
-    elements = ProjectElementsSerializer(
-        many=True,
-        read_only=True
-    )
-
-    class Meta:
-        model = models.Project
-        fields = '__all__'
+###############################################################################
+# List and Retrieve Serializers                                               #
+###############################################################################
 
 
 class ProjectListSerializer(serializers.ModelSerializer):
@@ -80,37 +169,32 @@ class ProjectListSerializer(serializers.ModelSerializer):
         return endpoint
 
 
-class ProjectSimpleSerializer(serializers.ModelSerializer):
+class ProjectRetrieveSerializer(serializers.ModelSerializer):
+    books = BookNestedSerializer(
+        many=True,
+        read_only=True
+    )
+    elements = ElementNestedSerializer(
+        many=True,
+        read_only=True
+    )
+
     class Meta:
         model = models.Project
         fields = '__all__'
 
 
-class BookChapterListSerializer(serializers.ModelSerializer):
-    content_preview = serializers.SerializerMethodField()
-
-    class Meta:
-        model = models.Chapter
-        fields = (
-            'id',
-            'title',
-            'content_preview',
-        )
-
-    def get_content_preview(self, obj):
-        chapter = get_object_or_404(models.Chapter, pk=obj.id)
-        if chapter.content:
-            return chapter.content[0:100]
-        return ""
+class BookListSerializer(BookNestedSerializer):
+    pass
 
 
 class BookRetrieveSerializer(serializers.ModelSerializer):
-    project = ProjectSimpleSerializer(read_only=True)
+    project = ProjectNestedSerializer(read_only=True)
     project_id = serializers.PrimaryKeyRelatedField(
         queryset=models.Project.objects.all(),
         write_only=True
     )
-    chapters = BookChapterListSerializer(
+    chapters = ChapterNestedSerializer(
         many=True,
         read_only=True,
     )
@@ -135,73 +219,6 @@ class BookRetrieveSerializer(serializers.ModelSerializer):
         return models.Book.objects.create(**validated_data)
 
 
-class BookListSerializer(serializers.ModelSerializer):
-    project = ProjectSimpleSerializer(read_only=True)
-    book_url = serializers.SerializerMethodField()
-
-    class Meta:
-        model = models.Book
-        fields = (
-            'id',
-            'title',
-            'description',
-            'book_url',
-            'project'
-        )
-
-    def get_book_url(self, obj):
-        request = self.context.get('request')
-        endpoint = reverse(
-            'book-detail',
-            kwargs={'project_pk': obj.project.pk,
-                    'pk': obj.pk},
-            request=request
-        )
-        return endpoint
-
-
-class BookSimpleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Book
-        fields = (
-            'id',
-            'title',
-            'description'
-        )
-
-
-class ChapterRetrieveSerializer(serializers.ModelSerializer):
-    book = BookSimpleSerializer(read_only=True)
-    book_id = serializers.PrimaryKeyRelatedField(
-        queryset=models.Book.objects.all(),
-        write_only=True
-    )
-    project = serializers.SerializerMethodField()
-
-    class Meta:
-        model = models.Chapter
-        fields = (
-            'id',
-            'title',
-            'content',
-            'notes',
-            'book',
-            'book_id',
-            'project'
-        )
-
-    def get_project(self, obj):
-        chapter = models.Chapter.objects.get(title=obj)
-        book = models.Book.objects.get(id=chapter.book_id)
-        project = models.Project.objects.get(id=book.project_id)
-        serializer = ProjectSimpleSerializer(instance=project)
-        return serializer.data
-
-    def create(self, validated_data):
-        validated_data['book'] = validated_data.pop('book_id')
-        return models.Chapter.objects.create(**validated_data)
-
-
 class ChapterListSerializer(serializers.ModelSerializer):
     content_preview = serializers.SerializerMethodField()
     book_id = serializers.PrimaryKeyRelatedField(
@@ -224,55 +241,41 @@ class ChapterListSerializer(serializers.ModelSerializer):
         return ""
 
 
-class ElementsFieldListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.ElementField
-        fields = (
-            'id',
-            'label',
-            'name',
-            'type',
-            'details',
-            'element_id'
-        )
-
-
-class ElementElementInstanceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.ElementInstance
-        fields = (
-            'id',
-            'name'
-        )
-
-
-class ElementRetrieveSerializer(serializers.ModelSerializer):
-    project = ProjectSimpleSerializer(read_only=True)
-    project_id = serializers.PrimaryKeyRelatedField(
-        queryset=models.Project.objects.all(),
+class ChapterRetrieveSerializer(serializers.ModelSerializer):
+    book = BookNestedSerializer(read_only=True)
+    book_id = serializers.PrimaryKeyRelatedField(
+        queryset=models.Book.objects.all(),
         write_only=True
     )
-    element_fields = ElementsFieldListSerializer(many=True, read_only=True)
+    project = serializers.SerializerMethodField()
 
     class Meta:
-        model = models.Element
+        model = models.Chapter
         fields = (
             'id',
-            'name',
-            'project',
-            'project_id',
-            'element_fields'
+            'title',
+            'content',
+            'notes',
+            'book',
+            'book_id',
+            'project'
         )
 
+    def get_project(self, obj):
+        chapter = models.Chapter.objects.get(title=obj)
+        book = models.Book.objects.get(id=chapter.book_id)
+        project = models.Project.objects.get(id=book.project_id)
+        serializer = ProjectNestedSerializer(instance=project)
+        return serializer.data
+
     def create(self, validated_data):
-        validated_data['project'] = validated_data.pop('project_id')
-        return models.Element.objects.create(**validated_data)
+        validated_data['book'] = validated_data.pop('book_id')
+        return models.Chapter.objects.create(**validated_data)
 
 
 class ElementListSerializer(serializers.ModelSerializer):
-    project = ProjectSimpleSerializer(read_only=True)
     instances_url = serializers.SerializerMethodField()
-    element_instances = ElementElementInstanceSerializer(
+    element_instances = ElementInstanceNestedSerializer(
         many=True,
         read_only=True
     )
@@ -283,7 +286,6 @@ class ElementListSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
-            'project',
             'instances_url',
             'element_instances',
             'fields_url'
@@ -308,30 +310,41 @@ class ElementListSerializer(serializers.ModelSerializer):
         return endpoint
 
 
-class ElementSimpleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Element
-        fields = (
-            'id',
-            'name'
-        )
-
-
-class ElementInstanceSerializer(serializers.ModelSerializer):
-    project = ProjectSimpleSerializer(read_only=True)
+class ElementRetrieveSerializer(serializers.ModelSerializer):
+    project = ProjectNestedSerializer(read_only=True)
     project_id = serializers.PrimaryKeyRelatedField(
         queryset=models.Project.objects.all(),
         write_only=True
     )
-    element = ElementSimpleSerializer(read_only=True)
+    element_fields = ElementsFieldNestedSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.Element
+        fields = (
+            'id',
+            'name',
+            'project',
+            'project_id',
+            'element_fields'
+        )
+
+    def create(self, validated_data):
+        validated_data['project'] = validated_data.pop('project_id')
+        return models.Element.objects.create(**validated_data)
+
+
+class ElementInstanceSerializer(serializers.ModelSerializer):
+    project_id = serializers.PrimaryKeyRelatedField(
+        queryset=models.Project.objects.all(),
+        write_only=True
+    )
     element_id = serializers.PrimaryKeyRelatedField(
         queryset=models.Element.objects.all(),
-        write_only=True
     )
 
     class Meta:
         model = models.ElementInstance
-        fields = '__all__'
+        exclude = ('project', 'element')
 
     def create(self, validated_data):
         validated_data['project'] = validated_data.pop('project_id')
@@ -341,7 +354,7 @@ class ElementInstanceSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         response = super().to_representation(instance)
         element_instance_id = response['id']
-        element_id = response['element']['id']
+        element_id = response.pop('element_id')
         element_fields = models.ElementField.objects.filter(
             element_id=element_id
         )
@@ -398,17 +411,8 @@ class ElementFieldSerializer(serializers.ModelSerializer):
         return models.ElementField.objects.create(**validated_data)
 
 
-class ElementInstanceSimpleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.ElementInstance
-        fields = (
-            'id',
-            'name'
-        )
-
-
 class ElementValueSerializer(serializers.ModelSerializer):
-    element_instance = ElementInstanceSimpleSerializer(read_only=True)
+    element_instance = ElementInstanceNestedSerializer(read_only=True)
     element_instance_id = serializers.PrimaryKeyRelatedField(
         queryset=models.ElementInstance.objects.all(),
         write_only=True

@@ -28,43 +28,41 @@ export default class ProjectDetailNav extends Component {
   render() {
     let project = this.props.project
     return (
-      <div>
-        <h4>
+      <>
+        <div className="nav-item">
           {this.state.loading
-            ? "Project Name Loading..."
+            ? <span>"Project Name"</span>
             : <NavLink to={`/project/${project.id}`}>
-                {project.title}
+                <span>{project.title}</span>
               </NavLink>
           }
-        </h4>
-        <ul>
-          <li>
-            <NavLink to={`/project/${project.id}/book`}>
-              Books
-            </NavLink>
-          </li>
-          <li>
-            Outlines
-          </li>
-          <li>
-            <NavLink to={`/project/${project.id}/element`}>
-              Elements
-            </NavLink>
-            {project.elements && 
-              <ul>
-                {project.elements.map(element => 
-                  <NavLink
-                    to={`/project/${project.id}/element/${element.id}`}
-                    key={element.id}
-                  >
-                    <li>{element.name}</li>
-                  </NavLink>
-                )}
-              </ul>
-            }
-          </li>
-        </ul>
-      </div>
+        </div>
+        <div className="nav-item">
+          <NavLink to={`/project/${project.id}/book`}>
+            <span>Books</span>
+          </NavLink>
+        </div>
+        <div className="nav-item">
+          <span>Outlines</span>
+        </div>
+        <div className="nav-item">
+          <NavLink to={`/project/${project.id}/element`}>
+            <span>Elements</span>
+          </NavLink>
+        </div>
+        {project.elements && 
+          project.elements.map(element => 
+            <div className="nav-item">
+              <NavLink
+                to={`/project/${project.id}/element/${element.id}`}
+                key={element.id}
+              >
+                <span>&gt; {element.name}</span>
+              </NavLink>
+            </div>
+          )
+        }
+      </>
     );
   }
 }

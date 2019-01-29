@@ -15,14 +15,10 @@ export default class BookDetail extends Component {
   };
 
   state = {
-    get book() {
-      const { match } = this.props;
-      return { id: match.params.book_id };
-    },
-    get project() {
-      const { match } = this.props;
-      return { id: match.params.project_id };
-    },
+    // eslint-disable-next-line react/destructuring-assignment
+    project: { id: this.props.match.params.project_id },
+    // eslint-disable-next-line react/destructuring-assignment
+    book: { id: this.props.match.params.book_id },
     loading: true
   };
 
@@ -46,13 +42,13 @@ export default class BookDetail extends Component {
   }
 
   rename = (title) => {
-    const { book } = this.state;
+    const { project, book } = this.state;
     const data = {
       id: book.id,
       title
     };
     axios
-      .patch(`http://127.0.0.1:8000/api/project/${book.project.id}/book/${book.id}/`, data)
+      .patch(`http://127.0.0.1:8000/api/project/${project.id}/book/${book.id}/`, data)
       .then(() => {
         this.setState(prevState => ({
           book: {
@@ -66,7 +62,7 @@ export default class BookDetail extends Component {
       });
   };
 
-  delete = () => {
+  deleteBook = () => {
     const { removeBookFromProject, history } = this.props;
     const { book, project } = this.state;
     axios
@@ -86,12 +82,17 @@ export default class BookDetail extends Component {
     return (
       <div className="bookview-body body">
         <BookDetailBreadcrumbs
-          book={book}
           project={project}
+          book={book}
           rename={this.rename}
           loading={loading}
         />
-        <BookDetailToolbar {...this.props} delete={this.delete} />
+        <BookDetailToolbar
+          {...this.props}
+          project={project}
+          book={book}
+          deleteBook={this.deleteBook}
+        />
         <main className="bookview-container">
           <div className="book-chapters">
             {loading ? (

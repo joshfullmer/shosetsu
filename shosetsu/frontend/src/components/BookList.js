@@ -1,54 +1,53 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 import BookCard from './BookCard';
 import BookListToolbar from './BookListToolbar';
 import BookListBreadcrumbs from './breadcrumbs/BookListBreadcrumbs';
 
 export default class BookList extends Component {
+  static propTypes = {
+    match: PropTypes.object.isRequired
+  };
 
   state = {
+    // eslint-disable-next-line react/destructuring-assignment
+    project: { id: this.props.match.params.project_id },
     books: [],
-    project: {id: this.props.match.params.project_id},
-    loading: true,
-  }
+    loading: true
+  };
 
   componentDidMount() {
-    axios.get(`http://127.0.0.1:8000/api/project/${this.state.project.id}/book/`)
-      .then(response => {
+    const { project } = this.state;
+    axios
+      .get(`http://127.0.0.1:8000/api/project/${project.id}/book/`)
+      .then((response) => {
         this.setState({
           books: response.data.books,
           project: response.data.project,
           loading: false
-        })
+        });
       })
-      .catch(error => {
-        console.log('Error fetching and parsing book data', error)
+      .catch((error) => {
+        console.log('Error fetching and parsing book data', error);
       });
   }
 
   render() {
-    let project = this.state.project
+    const { project, books, loading } = this.state;
 
     return (
       <div className="booklist-body body">
-        <BookListBreadcrumbs
-          project={this.state.project}
-          loading={this.state.loading}
-        />
-        <BookListToolbar {...this.props} />
+        <BookListBreadcrumbs project={project} loading={loading} />
+        <BookListToolbar {...this.props} project={project} />
         <main className="booklist-container">
           <div className="booklist">
-            {(this.state.loading)
-              ? <p>Loading...</p>
-              : this.state.books.map(book =>
-                  <BookCard
-                    data={book}
-                    key={book.id}
-                    project={project}
-                  />
-                )
-            }
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              books.map(book => <BookCard book={book} key={book.id} project={project} />)
+            )}
           </div>
         </main>
       </div>

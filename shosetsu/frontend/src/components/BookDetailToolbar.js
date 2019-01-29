@@ -1,17 +1,22 @@
-import React, { Component } from 'react'
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import AddChapterModal from './modals/AddChapterModal'
+import AddChapterModal from './modals/AddChapterModal';
 
-export default class BookDetailToolbar extends Component {
-  render() {
-    return (
-      <aside className="toolbar">
-        <AddChapterModal
-          buttonClassName=""
-          {...this.props}
-        />
-        <button onClick={this.props.delete}>Delete</button>
-      </aside>
-    )
-  }
-}
+const BookDetailToolbar = (props) => {
+  const { deleteBook } = props;
+  return (
+    <aside className="toolbar">
+      <AddChapterModal {...props} />
+      <button type="button" onClick={deleteBook}>
+        Delete
+      </button>
+    </aside>
+  );
+};
+
+BookDetailToolbar.propTypes = {
+  deleteBook: PropTypes.func.isRequired
+};
+
+export default BookDetailToolbar;

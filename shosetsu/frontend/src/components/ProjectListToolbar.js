@@ -1,14 +1,10 @@
-import React, { Component } from 'react'
+import React from 'react';
 import AddProjectModal from './modals/AddProjectModal';
 
-export default class ProjectListToolbar extends Component {
-  render() {
-    return (
-      <aside className="toolbar">
-        <AddProjectModal
-          {...this.props}
-        />
-      </aside>
-    )
-  }
+export default function ProjectListToolbar(props) {
+  return (
+    <aside className="toolbar">
+      <AddProjectModal {...props} />
+    </aside>
+  );
 }

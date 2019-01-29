@@ -7,8 +7,8 @@ import InlineEditText from '../inline-edit/InlineEditText';
 
 export default class BookDetailBreadcrumbs extends PureComponent {
   static propTypes = {
-    book: PropTypes.shape.isRequired,
-    project: PropTypes.shape.isRequired,
+    book: PropTypes.object.isRequired,
+    project: PropTypes.object.isRequired,
     rename: PropTypes.func.isRequired,
     loading: PropTypes.bool.isRequired
   };

@@ -11,9 +11,9 @@ import ProjectDetailBreadcrumbs from './breadcrumbs/ProjectDetailBreadcrumbs';
 
 export default class ProjectDetail extends Component {
   static propTypes = {
-    project: PropTypes.shape.isRequired,
-    match: PropTypes.shape.isRequired,
-    history: PropTypes.shape.isRequired,
+    project: PropTypes.object.isRequired,
+    match: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
     renameProject: PropTypes.func.isRequired
   };
 
@@ -33,7 +33,7 @@ export default class ProjectDetail extends Component {
       });
   };
 
-  delete = () => {
+  deleteProject = () => {
     const { match, history } = this.props;
     axios
       .delete(`http://127.0.0.1:8000/api/project/${match.params.project_id}/`)
@@ -52,7 +52,11 @@ export default class ProjectDetail extends Component {
     return (
       <div className="projectview-body body">
         <ProjectDetailBreadcrumbs project={project} rename={this.rename} loading={loading} />
-        <ProjectDetailToolbar {...this.props} delete={this.delete} />
+        <ProjectDetailToolbar
+          {...this.props}
+          project={project}
+          deleteProject={this.deleteProject}
+        />
         <main className="projectview-container">
           <NavLink to={`/project/${project.id}/book`}>
             <header>Books</header>
@@ -61,7 +65,7 @@ export default class ProjectDetail extends Component {
             {loading ? (
               <p>Loading...</p>
             ) : (
-              project.books.map(book => <BookCard data={book} key={book.id} project={project} />)
+              project.books.map(book => <BookCard book={book} key={book.id} project={project} />)
             )}
           </div>
           <NavLink to={`/project/${project.id}/element`}>

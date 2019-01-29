@@ -4,9 +4,9 @@ import { NavLink } from 'react-router-dom';
 
 export default class ChapterCard extends PureComponent {
   static propTypes = {
-    chapter: PropTypes.shape.isRequired,
-    book: PropTypes.shape.isRequired,
-    project: PropTypes.shape.isRequired
+    chapter: PropTypes.object.isRequired,
+    book: PropTypes.object.isRequired,
+    project: PropTypes.object.isRequired
   };
 
   render() {

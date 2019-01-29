@@ -1,22 +1,24 @@
-import React, { Component } from 'react'
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import AddFieldModal from './modals/AddFieldModal'
-import AddInstanceModal from './modals/AddInstanceModal'
+import AddFieldModal from './modals/AddFieldModal';
+import AddInstanceModal from './modals/AddInstanceModal';
 
-export default class ElementDetailToolbar extends Component {
-  render () {
-    return (
-      <aside className="toolbar">
-        <AddFieldModal 
-          buttonClassName=""
-          {...this.props}
-        />
-        <AddInstanceModal
-          buttonClassName=""
-          {...this.props}
-        />
-        <button onClick={this.props.deleteElement}>Delete Element</button>
-      </aside>
-    )
-  }
-}
+const ElementDetailToolbar = (props) => {
+  const { deleteElement } = props;
+  return (
+    <aside className="toolbar">
+      <AddFieldModal {...props} />
+      <AddInstanceModal {...props} />
+      <button type="button" onClick={deleteElement}>
+        Delete Element
+      </button>
+    </aside>
+  );
+};
+
+ElementDetailToolbar.propTypes = {
+  deleteElement: PropTypes.func.isRequired
+};
+
+export default ElementDetailToolbar;

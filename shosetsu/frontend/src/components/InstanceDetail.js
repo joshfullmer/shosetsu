@@ -11,18 +11,12 @@ export default class InstanceDetail extends Component {
   };
 
   state = {
-    get project() {
-      const { match } = this.props;
-      return { id: match.params.project_id };
-    },
-    get element() {
-      const { match } = this.props;
-      return { id: match.params.element_id };
-    },
-    get instance() {
-      const { match } = this.props;
-      return { id: match.params.instance_id };
-    },
+    // eslint-disable-next-line react/destructuring-assignment
+    project: { id: this.props.match.params.project_id },
+    // eslint-disable-next-line react/destructuring-assignment
+    element: { id: this.props.match.params.element_id },
+    // eslint-disable-next-line react/destructuring-assignment
+    instance: { id: this.props.match.params.instance_id },
     fields: [],
     loading: true
   };

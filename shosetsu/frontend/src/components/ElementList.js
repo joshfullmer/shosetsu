@@ -8,15 +8,13 @@ import ElementListBreadcrumbs from './breadcrumbs/ElementListBreadcrumbs';
 
 export default class ElementList extends Component {
   static propTypes = {
-    match: PropTypes.shape.isRequired,
-    history: PropTypes.shape.isRequired
+    match: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
   };
 
   state = {
-    get project() {
-      const { match } = this.props;
-      return { id: match.params.project_id };
-    },
+    // eslint-disable-next-line react/destructuring-assignment
+    project: { id: this.props.match.params.project_id },
     elements: [],
     loading: true
   };
@@ -46,7 +44,7 @@ export default class ElementList extends Component {
     return (
       <div className="elementlist-body body">
         <ElementListBreadcrumbs project={project} loading={loading} />
-        <ElementListToolbar {...this.props} />
+        <ElementListToolbar {...this.props} project={project} />
         <main className="elementlist-container">
           {loading ? (
             <p>Loading...</p>

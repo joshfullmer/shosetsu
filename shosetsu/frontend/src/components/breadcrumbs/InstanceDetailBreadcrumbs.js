@@ -7,9 +7,9 @@ import InlineEditText from '../inline-edit/InlineEditText';
 
 export default class InstanceDetailBreadcrumbs extends PureComponent {
   static propTypes = {
-    project: PropTypes.shape.isRequired,
-    element: PropTypes.shape.isRequired,
-    instance: PropTypes.shape.isRequired,
+    project: PropTypes.object.isRequired,
+    element: PropTypes.object.isRequired,
+    instance: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     updateInstanceName: PropTypes.func.isRequired
   };

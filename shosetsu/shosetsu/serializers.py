@@ -346,11 +346,6 @@ class ElementInstanceListSerializer(serializers.ModelSerializer):
         model = models.ElementInstance
         exclude = ('project', 'element')
 
-    def create(self, validated_data):
-        validated_data['project'] = validated_data.pop('project_id')
-        validated_data['element'] = validated_data.pop('element_id')
-        return models.ElementInstance.objects.create(**validated_data)
-
     def to_representation(self, instance):
         response = super().to_representation(instance)
         element_instance_id = response['id']
@@ -370,12 +365,25 @@ class ElementInstanceListSerializer(serializers.ModelSerializer):
 
 
 class ElementInstanceRetrieveSerializer(serializers.ModelSerializer):
-    project = ProjectNestedSerializer()
-    element = ElementNestedSerializer()
+    project = ProjectNestedSerializer(read_only=True)
+    project_id = serializers.PrimaryKeyRelatedField(
+        queryset=models.Project.objects.all(),
+        write_only=True
+    )
+    element = ElementNestedSerializer(read_only=True)
+    element_id = serializers.PrimaryKeyRelatedField(
+        queryset=models.Element.objects.all(),
+        write_only=True
+    )
 
     class Meta:
         model = models.ElementInstance
         fields = '__all__'
+
+    def create(self, validated_data):
+        validated_data['project'] = validated_data.pop('project_id')
+        validated_data['element'] = validated_data.pop('element_id')
+        return models.ElementInstance.objects.create(**validated_data)
 
     def to_representation(self, instance):
         response = super().to_representation(instance)

@@ -6,7 +6,7 @@ import BreadcrumbsHeader from './BreadcrumbsHeader';
 
 export default class ElementListBreadcrumbs extends PureComponent {
   static propTypes = {
-    project: PropTypes.shape.isRequired,
+    project: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired
   };
 

@@ -9,21 +9,17 @@ import InlineEditText from './inline-edit/InlineEditText';
 
 export default class ElementDetail extends Component {
   static propTypes = {
-    match: PropTypes.shape.isRequired,
-    history: PropTypes.shape.isRequired,
+    match: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
     removeElementFromProject: PropTypes.func.isRequired,
     updateElementName: PropTypes.func.isRequired
   };
 
   state = {
-    get project() {
-      const { match } = this.props;
-      return { id: match.params.project_id };
-    },
-    get element() {
-      const { match } = this.props;
-      return { id: match.params.element_id };
-    },
+    // eslint-disable-next-line react/destructuring-assignment
+    project: { id: this.props.match.params.project_id },
+    // eslint-disable-next-line react/destructuring-assignment
+    element: { id: this.props.match.params.element_id },
     fields: [],
     instances: [],
     loading: true
@@ -139,13 +135,15 @@ export default class ElementDetail extends Component {
       });
   };
 
-  updateFieldValue = (value, elementInstanceId, fieldName) => {
+  // eslint-disable-next-line camelcase
+  updateFieldValue = (value, element_instance_id, field_name) => {
     const { fieldIds } = this.state;
     const { history } = this.props;
-    const elementFieldId = fieldIds[fieldName];
+    // eslint-disable-next-line camelcase
+    const element_field_id = fieldIds[field_name];
     const data = {
-      elementInstanceId,
-      elementFieldId,
+      element_instance_id,
+      element_field_id,
       value
     };
     axios.post('http://127.0.0.1:8000/api/element-value/', data).catch((error) => {
@@ -172,6 +170,7 @@ export default class ElementDetail extends Component {
           {...this.props}
           addField={this.addField}
           addInstance={this.addInstance}
+          project={project}
           element={element}
           deleteElement={this.deleteElement}
         />

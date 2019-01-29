@@ -1,59 +1,77 @@
-import React, { Component } from 'react'
-import Modal from 'react-modal'
-import axios from 'axios'
+import React, { Component } from 'react';
+import Modal from 'react-modal';
+import axios from 'axios';
+import PropTypes from 'prop-types';
 
 export default class AddInstanceModal extends Component {
+  static propTypes = {
+    project: PropTypes.object.isRequired,
+    element: PropTypes.object.isRequired,
+    addInstance: PropTypes.func.isRequired
+  };
 
   state = {
-    modalIsOpen: false
-  }
+    modalIsOpen: false,
+    name: ''
+  };
 
-  addInstanceFormSubmit = e => {
+  addInstanceFormSubmit = (e) => {
     e.preventDefault();
     this.closeModal();
-    let data = {
-      name: this.state.name,
-      element_id: this.props.match.params.element_id,
-      project_id: this.props.match.params.project_id
-    }
-    axios.post(`http://127.0.0.1:8000/api/project/${data.project_id}/element/${data.element_id}/instance/`, data)
-      .then(response => {
-        this.props.addInstance(response.data)
+    const { project, element, addInstance } = this.props;
+    const { name } = this.state;
+    const data = {
+      name,
+      element_id: element.id,
+      project_id: project.id
+    };
+    axios
+      .post(`http://127.0.0.1:8000/api/project/${project.id}/element/${element.id}/instance/`, data)
+      .then((response) => {
+        addInstance(response.data);
       })
-      .catch(error => {
-        console.log('Error creating instance', error)
-      })
-  }
+      .catch((error) => {
+        console.log('Error creating instance', error);
+      });
+  };
 
   openModal = () => {
-    this.setState({modalIsOpen: true})
-  }
+    this.setState({ modalIsOpen: true });
+  };
 
   closeModal = () => {
-    this.setState({modalIsOpen: false})
-  }
+    this.setState({ modalIsOpen: false });
+  };
 
-  handleNameChange = e => {
-    this.setState({name: e.target.value})
-  }
+  handleNameChange = (e) => {
+    this.setState({ name: e.target.value });
+  };
 
   render() {
+    const { modalIsOpen } = this.state;
+    const { element } = this.props;
     return (
       <>
-        <button className={this.props.buttonClassName} onClick={this.openModal}>Add {this.props.element.name}</button>
+        <button type="button" onClick={this.openModal}>
+          Add
+          {' '}
+          {element.name}
+        </button>
         <Modal
-          isOpen={this.state.modalIsOpen}
+          isOpen={modalIsOpen}
           onRequestClose={this.closeModal}
           contentLabel="Add Instance Modal"
         >
           <header>Instance Modal</header>
-          <button onClick={this.closeModal}>close</button>
+          <button type="button" onClick={this.closeModal}>
+            close
+          </button>
           <form onSubmit={this.addInstanceFormSubmit}>
             <input placeholder="Instance Name" name="name" onChange={this.handleNameChange} />
             <button type="submit">Create Instance</button>
           </form>
         </Modal>
       </>
-    )
+    );
   }
 }

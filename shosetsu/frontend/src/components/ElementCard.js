@@ -1,15 +1,20 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-export default class ElementCard extends Component {
-  render() {
-    let project = this.props.project;
-    let element = this.props.element;
+const ElementCard = (props) => {
+  const { project, element } = props;
 
-    return (
-      <NavLink to={`/project/${project.id}/element/${element.id}`} className="element-card">
-        <header>{element.name}</header>
-      </NavLink>
-    );
-  }
-}
+  return (
+    <NavLink to={`/project/${project.id}/element/${element.id}`} className="element-card">
+      <header>{element.name}</header>
+    </NavLink>
+  );
+};
+
+ElementCard.propTypes = {
+  project: PropTypes.object.isRequired,
+  element: PropTypes.object.isRequired
+};
+
+export default ElementCard;

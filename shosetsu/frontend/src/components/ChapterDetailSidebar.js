@@ -1,12 +1,18 @@
-import React, { Component } from 'react'
+import React from 'react';
+import PropTypes from 'prop-types';
 
-export default class ChapterDetailSidebar extends Component {
-  render() {
-    return (
-      <aside className="sidebar">
-        <h2>Notes</h2>
-        <p>{this.props.chapter.notes}</p>
-      </aside>
-    )
-  }
-}
+const ChapterDetailSidebar = (props) => {
+  const { chapter } = props;
+  return (
+    <aside className="sidebar">
+      <h2>Notes</h2>
+      <p>{chapter.notes}</p>
+    </aside>
+  );
+};
+
+ChapterDetailSidebar.propTypes = {
+  chapter: PropTypes.object.isRequired
+};
+
+export default ChapterDetailSidebar;

@@ -7,9 +7,9 @@ import BreadcrumbsHeader from './BreadcrumbsHeader';
 
 export default class ChapterDetailBreadcrumbs extends PureComponent {
   static propTypes = {
-    project: PropTypes.shape.isRequired,
-    book: PropTypes.shape.isRequired,
-    chapter: PropTypes.shape.isRequired,
+    project: PropTypes.object.isRequired,
+    book: PropTypes.object.isRequired,
+    chapter: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     updateChapterTitle: PropTypes.func.isRequired
   };

@@ -8,23 +8,17 @@ import ChapterDetailBreadcrumbs from './breadcrumbs/ChapterDetailBreadcrumbs';
 
 export default class ChapterDetail extends Component {
   static propTypes = {
-    match: PropTypes.shape.isRequired,
-    history: PropTypes.shape.isRequired
+    match: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
   };
 
   state = {
-    get project() {
-      const { match } = this.props;
-      return { id: match.params.project_id };
-    },
-    get book() {
-      const { match } = this.props;
-      return { id: match.params.book_id };
-    },
-    get chapter() {
-      const { match } = this.props;
-      return { id: match.params.chapter_id };
-    },
+    // eslint-disable-next-line react/destructuring-assignment
+    project: { id: this.props.match.params.project_id },
+    // eslint-disable-next-line react/destructuring-assignment
+    book: { id: this.props.match.params.book_id },
+    // eslint-disable-next-line react/destructuring-assignment
+    chapter: { id: this.props.match.params.chapter_id },
     loading: true
   };
 
@@ -35,6 +29,8 @@ export default class ChapterDetail extends Component {
       .get(`http://127.0.0.1:8000/api/project/${project.id}/book/${book.id}/chapter/${chapter.id}/`)
       .then((response) => {
         this.setState({
+          project: response.data.project,
+          book: response.data.book,
           chapter: response.data,
           loading: false
         });
@@ -75,7 +71,7 @@ export default class ChapterDetail extends Component {
       });
   };
 
-  delete = () => {
+  deleteChapter = () => {
     const { project, book, chapter } = this.state;
     const { history } = this.props;
     axios
@@ -110,7 +106,7 @@ export default class ChapterDetail extends Component {
           </main>
           <ChapterDetailSidebar chapter={chapter} />
         </div>
-        <ChapterDetailToolbar delete={this.delete} />
+        <ChapterDetailToolbar deleteChapter={this.deleteChapter} />
       </div>
     );
   }

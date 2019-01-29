@@ -1,43 +1,55 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 import NavItem from './NavItem';
 
 export default class ProjectDetailNav extends Component {
+  static propTypes = {
+    match: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
+    setProject: PropTypes.func.isRequired
+  };
 
   state = {
-    project_id: this.props.match.params.project_id,
+    // eslint-disable-next-line react/destructuring-assignment
+    project: { id: this.props.match.params.project_id },
     loading: true
-  }
+  };
 
   componentDidMount() {
-    axios.get(`http://127.0.0.1:8000/api/project/${this.state.project_id}/`)
-      .then(response => {
-        this.props.setProject(response.data)
+    const { project } = this.state;
+    const { setProject, history } = this.props;
+    axios
+      .get(`http://127.0.0.1:8000/api/project/${project.id}/`)
+      .then((response) => {
+        setProject(response.data);
         this.setState({
+          project: response.data,
           loading: false
         });
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.response.status === 404) {
-          this.props.history.push('/404')
+          history.push('/404');
         }
         console.log('Error fetching project data', error);
-      })
+      });
   }
 
   render() {
-    let project = this.props.project
+    const { project, loading } = this.state;
     return (
       <>
         <NavItem key={`project-${project.id}`}>
-          {this.state.loading
-            ? <span>"Project Name"</span>
-            : <NavLink to={`/project/${project.id}`}>
-                <span>{project.title}</span>
-              </NavLink>
-          }
+          {loading ? (
+            <span>Project Name</span>
+          ) : (
+            <NavLink to={`/project/${project.id}`}>
+              <span>{project.title}</span>
+            </NavLink>
+          )}
         </NavItem>
         <NavItem key="book">
           <NavLink to={`/project/${project.id}/book`}>
@@ -52,17 +64,17 @@ export default class ProjectDetailNav extends Component {
             <span>Elements</span>
           </NavLink>
         </NavItem>
-        {project.elements && 
-          project.elements.map(element => 
+        {project.elements
+          && project.elements.map(element => (
             <NavItem key={`element-${element.id}`}>
-              <NavLink
-                to={`/project/${project.id}/element/${element.id}`}
-              >
-                <span>&gt; {element.name}</span>
+              <NavLink to={`/project/${project.id}/element/${element.id}`}>
+                <span>
+                  &gt;
+                  {element.name}
+                </span>
               </NavLink>
             </NavItem>
-          )
-        }
+          ))}
       </>
     );
   }

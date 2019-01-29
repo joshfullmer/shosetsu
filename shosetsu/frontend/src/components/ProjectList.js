@@ -38,7 +38,7 @@ export default class ProjectList extends Component {
             {loading ? (
               <p>Loading...</p>
             ) : (
-              projects.map(project => <ProjectCard data={project} key={project.id} />)
+              projects.map(project => <ProjectCard project={project} key={project.id} />)
             )}
           </div>
         </main>

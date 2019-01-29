@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 
+import NavItem from './NavItem';
+
 export default class ProjectDetailNav extends Component {
 
   state = {
@@ -29,37 +31,36 @@ export default class ProjectDetailNav extends Component {
     let project = this.props.project
     return (
       <>
-        <div className="nav-item">
+        <NavItem key={`project-${project.id}`}>
           {this.state.loading
             ? <span>"Project Name"</span>
             : <NavLink to={`/project/${project.id}`}>
                 <span>{project.title}</span>
               </NavLink>
           }
-        </div>
-        <div className="nav-item">
+        </NavItem>
+        <NavItem key="book">
           <NavLink to={`/project/${project.id}/book`}>
             <span>Books</span>
           </NavLink>
-        </div>
-        <div className="nav-item">
+        </NavItem>
+        <NavItem key="outline">
           <span>Outlines</span>
-        </div>
-        <div className="nav-item">
+        </NavItem>
+        <NavItem key="element">
           <NavLink to={`/project/${project.id}/element`}>
             <span>Elements</span>
           </NavLink>
-        </div>
+        </NavItem>
         {project.elements && 
           project.elements.map(element => 
-            <div className="nav-item">
+            <NavItem key={`element-${element.id}`}>
               <NavLink
                 to={`/project/${project.id}/element/${element.id}`}
-                key={element.id}
               >
                 <span>&gt; {element.name}</span>
               </NavLink>
-            </div>
+            </NavItem>
           )
         }
       </>

@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
+import React from 'react';
 
-export default class ProjectListBreadcrumbs extends Component {
-  render() {
-    return (
-      <header className="title">
-        <span>Projects</span>
-      </header>
-    )
-  }
+import BreadcrumbsHeader from './BreadcrumbsHeader';
+
+export default function ProjectListBreadcrumbs() {
+  return (
+    <BreadcrumbsHeader>
+      <span>Projects</span>
+    </BreadcrumbsHeader>
+  );
 }

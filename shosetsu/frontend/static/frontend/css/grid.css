@@ -2,17 +2,6 @@
 /* Main Page Layout */
 /* ====================================================== */
 
-.container {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-auto-rows: minmax(100px, auto);
-  grid-template-areas:
-    "logo"
-    "nav"
-    "body"
-    "footer";
-}
-
 header.logo {
   grid-area: logo;
 }
@@ -79,6 +68,8 @@ footer.footer {
   grid-template-areas:
     "title"
     "main"
+    "sidebar"
+    "toolbar"
 }
 
 .project-books {
@@ -125,6 +116,7 @@ footer.footer {
   grid-template-areas:
     "title"
     "main"
+    "sidebar"
     "toolbar"
 }
 
@@ -220,19 +212,20 @@ footer.footer {
 
 
 /* ====================================================== */
+/* Mobile Specific */
+/* ====================================================== */
+
+@media (max-width: 767px) {
+  nav {
+    display: none
+  }
+}
+
+/* ====================================================== */
 /* Responsive Layout */
 /* ====================================================== */
 
 @media (min-width: 768px) {
-  .container {
-    height: 100vh;
-    grid-template-columns: 1fr 6fr;
-    grid-template-rows: 75px minmax(150px, auto) 100px;
-    grid-template-areas:
-      "logo body"
-      "nav body"
-      "footer body";
-  }
 
 /* ====================================================== */
 /* Projects Layout (mid-size) */

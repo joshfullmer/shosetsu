@@ -1,23 +1,32 @@
-import React, { Component } from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom';
 
-export default class BookListBreadcrumbs extends Component {
+import BreadcrumbsHeader from './BreadcrumbsHeader';
+
+export default class BookListBreadcrumbs extends PureComponent {
+  static propTypes = {
+    project: PropTypes.shape.isRequired,
+    loading: PropTypes.bool.isRequired
+  };
+
   render() {
-    let project = this.props.project;
-    
+    const { project, loading } = this.props;
+
     return (
-      <header className="title">
-        {(this.props.loading)
-          ? "Loading..."
-          : <>
-              <NavLink to='/project'>Projects</NavLink>
-              <span> &gt; </span>
-              <NavLink to={`/project/${project.id}`}>{project.title}</NavLink>
-              <span> &gt; </span>
-              <span>Books</span>
-            </>
-        }
-      </header>
-    )
+      <BreadcrumbsHeader>
+        {loading ? (
+          'Loading...'
+        ) : (
+          <>
+            <NavLink to="/project">Projects</NavLink>
+            <span> &gt; </span>
+            <NavLink to={`/project/${project.id}`}>{project.title}</NavLink>
+            <span> &gt; </span>
+            <span>Books</span>
+          </>
+        )}
+      </BreadcrumbsHeader>
+    );
   }
 }

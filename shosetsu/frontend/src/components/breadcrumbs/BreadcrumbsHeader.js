@@ -1,0 +1,7 @@
+import styled from 'styled-components';
+
+const BreadcrumbsHeader = styled.header`
+  background-color: #3f8abf;
+`;
+
+export default BreadcrumbsHeader;

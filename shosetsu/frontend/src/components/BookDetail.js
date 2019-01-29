@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 import ChapterCard from './ChapterCard';
 import BookDetailToolbar from './BookDetailToolbar';
@@ -7,88 +8,108 @@ import BookDetailSidebar from './BookDetailSidebar';
 import BookDetailBreadcrumbs from './breadcrumbs/BookDetailBreadcrumbs';
 
 export default class BookDetail extends Component {
+  static propTypes = {
+    removeBookFromProject: PropTypes.func.isRequired,
+    history: PropTypes.shape.isRequired,
+    match: PropTypes.shape.isRequired
+  };
 
   state = {
-    book: {id: this.props.match.params.book_id},
-    project_id: this.props.match.params.project_id,
+    get book() {
+      const { match } = this.props;
+      return { id: match.params.book_id };
+    },
+    get project() {
+      const { match } = this.props;
+      return { id: match.params.project_id };
+    },
     loading: true
-  }
+  };
 
   componentDidMount() {
-    axios.get(`http://127.0.0.1:8000/api/project/${this.state.project_id}/book/${this.state.book.id}/`)
-      .then(response => {
+    const { book, project, history } = this.state;
+    axios
+      .get(`http://127.0.0.1:8000/api/project/${project.id}/book/${book.id}/`)
+      .then((response) => {
         this.setState({
           book: response.data,
+          project: response.data.project,
           loading: false
         });
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.response.status === 404) {
-          this.props.history.push('/404')
+          history.push('/404');
         }
         console.log('Error fetching book data', error);
       });
   }
 
-  rename = title => {
-    let book = this.state.book
-    let data = {
-      id: book.project.id,
-      title: title
-    }
-    axios.patch(`http://127.0.0.1:8000/api/project/${book.project.id}/book/${book.id}/`, data)
+  rename = (title) => {
+    const { book } = this.state;
+    const data = {
+      id: book.id,
+      title
+    };
+    axios
+      .patch(`http://127.0.0.1:8000/api/project/${book.project.id}/book/${book.id}/`, data)
       .then(() => {
         this.setState(prevState => ({
           book: {
             ...prevState.book,
-            title: title
+            title
           }
-        }))
+        }));
       })
-      .catch(error => {
-        console.log('Error renaming book', error)
-      })
-  }
+      .catch((error) => {
+        console.log('Error renaming book', error);
+      });
+  };
 
   delete = () => {
-    axios.delete(`http://127.0.0.1:8000/api/project/${this.state.project_id}/book/${this.state.book.id}/`)
+    const { removeBookFromProject, history } = this.props;
+    const { book, project } = this.state;
+    axios
+      .delete(`http://127.0.0.1:8000/api/project/${project.id}/book/${book.id}/`)
       .then(() => {
-        this.props.removeBookFromProject({id: this.state.book.id})
-        this.props.history.push(`/project/${this.state.project_id}/`);
+        removeBookFromProject({ id: book.id });
+        history.push(`/project/${project.id}/`);
       })
-      .catch(error => {
-        console.log('Error deleting book', error)
+      .catch((error) => {
+        console.log('Error deleting book', error);
       });
-  }
+  };
 
   render() {
-    let book = this.state.book;
+    const { book, project, loading } = this.state;
 
-    return(
+    return (
       <div className="bookview-body body">
         <BookDetailBreadcrumbs
           book={book}
+          project={project}
           rename={this.rename}
-          loading={this.state.loading}
+          loading={loading}
         />
-        <BookDetailToolbar {...this.props} delete={this.delete}/>
+        <BookDetailToolbar {...this.props} delete={this.delete} />
         <main className="bookview-container">
           <div className="book-chapters">
-            {(this.state.loading)
-              ? <p>Loading...</p>
-              : book.chapters.map(chapter =>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              book.chapters.map(chapter => (
                 <ChapterCard
-                  data={chapter}
+                  chapter={chapter}
                   key={chapter.id}
                   project={book.project}
                   book={book}
                 />
-              )
-            }
+              ))
+            )}
           </div>
         </main>
         {/* TODO: update sidebar to edit description */}
-        <BookDetailSidebar book={book} loading={this.state.loading} />
+        <BookDetailSidebar book={book} loading={loading} />
       </div>
     );
   }

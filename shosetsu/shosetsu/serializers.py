@@ -333,7 +333,7 @@ class ElementRetrieveSerializer(serializers.ModelSerializer):
         return models.Element.objects.create(**validated_data)
 
 
-class ElementInstanceSerializer(serializers.ModelSerializer):
+class ElementInstanceListSerializer(serializers.ModelSerializer):
     project_id = serializers.PrimaryKeyRelatedField(
         queryset=models.Project.objects.all(),
         write_only=True
@@ -355,6 +355,32 @@ class ElementInstanceSerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
         element_instance_id = response['id']
         element_id = response.pop('element_id')
+        element_fields = models.ElementField.objects.filter(
+            element_id=element_id
+        )
+        element_values = models.ElementValue.objects.filter(
+            element_instance_id=element_instance_id
+        )
+        field_names = {field.id: field.name for field in element_fields}
+        field_values = {value.element_field.id: value.value
+                        for value in element_values}
+        for k, v in field_names.items():
+            response[v] = field_values.get(k, '')
+        return response
+
+
+class ElementInstanceRetrieveSerializer(serializers.ModelSerializer):
+    project = ProjectNestedSerializer()
+    element = ElementNestedSerializer()
+
+    class Meta:
+        model = models.ElementInstance
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        element_instance_id = response['id']
+        element_id = response['element']['id']
         element_fields = models.ElementField.objects.filter(
             element_id=element_id
         )

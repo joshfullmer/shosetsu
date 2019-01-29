@@ -72,7 +72,10 @@ class ElementInstanceViewSet(viewsets.ModelViewSet):
             element=self.kwargs['element_pk']
         )
 
-    serializer_class = serializers.ElementInstanceSerializer
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return serializers.ElementInstanceListSerializer
+        return serializers.ElementInstanceRetrieveSerializer
 
     def list(self, request, *args, **kwargs):
         response = super(ElementInstanceViewSet, self).list(

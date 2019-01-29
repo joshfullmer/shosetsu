@@ -1,20 +1,29 @@
-import React, { Component } from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { PureComponent } from 'react';
+import { NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-import InlineEditText from '../inline-edit/InlineEditText'
+import InlineEditText from '../inline-edit/InlineEditText';
+import BreadcrumbsHeader from './BreadcrumbsHeader';
 
-export default class ProjectDetailBreadcrumbs extends Component {
+export default class ProjectDetailBreadcrumbs extends PureComponent {
+  static propTypes = {
+    project: PropTypes.shape.isRequired,
+    loading: PropTypes.bool.isRequired,
+    rename: PropTypes.func.isRequired
+  };
+
   render() {
+    const { project, loading, rename } = this.props;
     return (
-      <header className="title">
-        <NavLink to='/project'>Projects</NavLink>
+      <BreadcrumbsHeader>
+        <NavLink to="/project">Projects</NavLink>
         <span> &gt; </span>
-        <InlineEditText
-          tag="span"
-          initialValue={this.props.project.title}
-          handleSave={this.props.rename}
-        />
-      </header>
-    )
+        {loading ? (
+          'Loading...'
+        ) : (
+          <InlineEditText tag="span" initialValue={project.title} handleSave={rename} />
+        )}
+      </BreadcrumbsHeader>
+    );
   }
 }

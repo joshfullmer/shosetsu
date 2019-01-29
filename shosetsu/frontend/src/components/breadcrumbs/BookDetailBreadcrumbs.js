@@ -1,35 +1,39 @@
-import React, { Component } from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom';
 
+import BreadcrumbsHeader from './BreadcrumbsHeader';
 import InlineEditText from '../inline-edit/InlineEditText';
 
-export default class BookDetailBreadcrumbs extends Component {
+export default class BookDetailBreadcrumbs extends PureComponent {
+  static propTypes = {
+    book: PropTypes.shape.isRequired,
+    project: PropTypes.shape.isRequired,
+    rename: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired
+  };
+
   render() {
-    let book = this.props.book
-    let project;
-    if (book) {
-      project = book.project
-    }
+    const {
+      book, project, rename, loading
+    } = this.props;
 
     return (
-      <header className="title">
-        {(this.props.loading)
-          ? "Loading..."
-          : <>
-              <NavLink to='/project'>Projects</NavLink>
-              <span> &gt; </span>
-              <NavLink to={`/project/${project.id}`}>{project.title}</NavLink>
-              <span> &gt; </span>
-              <NavLink to={`/project/${project.id}/book`}>Books</NavLink>
-              <span> &gt; </span>
-              <InlineEditText
-                tag="span"
-                initialValue={book.title}
-                handleSave={this.props.rename}
-              />
-            </>
-        }
-      </header>
-    )
+      <BreadcrumbsHeader className="hello">
+        {loading ? (
+          'Loading...'
+        ) : (
+          <>
+            <NavLink to="/project">Projects</NavLink>
+            <span> &gt; </span>
+            <NavLink to={`/project/${project.id}`}>{project.title}</NavLink>
+            <span> &gt; </span>
+            <NavLink to={`/project/${project.id}/book`}>Books</NavLink>
+            <span> &gt; </span>
+            <InlineEditText tag="span" initialValue={book.title} handleSave={rename} />
+          </>
+        )}
+      </BreadcrumbsHeader>
+    );
   }
 }

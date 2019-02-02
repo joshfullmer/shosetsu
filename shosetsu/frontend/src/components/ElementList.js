@@ -1,10 +1,36 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 import InstanceList from './InstanceList';
 import ElementListToolbar from './ElementListToolbar';
 import ElementListBreadcrumbs from './breadcrumbs/ElementListBreadcrumbs';
+import Body from './styled/Body';
+import Main from './styled/Main';
+
+const ElementListBody = styled(Body)`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: inherit;
+  grid-template-areas:
+    'title'
+    'main'
+    'toolbar';
+
+  @media (min-width: 768px) {
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: inherit;
+    grid-template-areas:
+      'title toolbar'
+      'main main'
+      'main main';
+  }
+`;
+
+const ElementListContainer = styled(Main)`
+  overflow: auto;
+`;
 
 export default class ElementList extends Component {
   static propTypes = {
@@ -42,10 +68,10 @@ export default class ElementList extends Component {
   render() {
     const { project, elements, loading } = this.state;
     return (
-      <div className="elementlist-body body">
+      <ElementListBody>
         <ElementListBreadcrumbs project={project} loading={loading} />
         <ElementListToolbar {...this.props} project={project} />
-        <main className="elementlist-container">
+        <ElementListContainer>
           {loading ? (
             <p>Loading...</p>
           ) : (
@@ -53,8 +79,8 @@ export default class ElementList extends Component {
               <InstanceList key={element.id} project={project} element={element} {...this.props} />
             ))
           )}
-        </main>
-      </div>
+        </ElementListContainer>
+      </ElementListBody>
     );
   }
 }

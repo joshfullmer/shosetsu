@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   BrowserRouter, Route, Switch, Redirect
 } from 'react-router-dom';
-import styled, { createGlobalStyle } from 'styled-components';
+import styled from 'styled-components';
 
 import Logo from './nav/Logo';
 import ProjectList from './ProjectList';
@@ -17,31 +17,12 @@ import ElementList from './ElementList';
 import ElementDetail from './ElementDetail';
 import NotFound from './NotFound';
 import InstanceDetail from './InstanceDetail';
-
-const GlobalStyle = createGlobalStyle`
-  @font-face {
-    font-family: 'Kouzan';
-    src: url('../../static/frontend/fonts/KouzanGyoushoTTF.ttf');
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    font-size: 1.2em;
-    font-family: 'Varela Round', sans-serif;
-    font-weight: bold;
-    padding: 0;
-    margin: 0;
-  }
-`;
+import GlobalStyle from './styled/GlobalStyle';
 
 const AppContainer = styled.div`
   > * {
     color: #fff;
     text-shadow: 0 2px 0 rgba(110, 133, 156, 0.12);
-    padding: 0.85em;
   }
   display: grid;
   grid-template-columns: 1fr;
@@ -60,10 +41,23 @@ const AppContainer = styled.div`
       'nav body'
       'footer body';
   }
+
+  @media (min-width: 992px) {
+    grid-template-areas:
+      'logo body'
+      'nav body'
+      'footer body';
+  }
 `;
 
 const Nav = styled.nav`
   background-color: #fbaea8;
+  grid-area: nav;
+  padding: 0.85em;
+
+  @media (max-width: 767px) {
+    display: none;
+  }
 `;
 
 class App extends Component {

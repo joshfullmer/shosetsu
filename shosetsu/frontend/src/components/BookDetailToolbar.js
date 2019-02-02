@@ -2,16 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import AddChapterModal from './modals/AddChapterModal';
+import Toolbar from './styled/Toolbar';
 
 const BookDetailToolbar = (props) => {
   const { deleteBook } = props;
   return (
-    <aside className="toolbar">
+    <Toolbar>
       <AddChapterModal {...props} />
       <button type="button" onClick={deleteBook}>
         Delete
       </button>
-    </aside>
+    </Toolbar>
   );
 };
 

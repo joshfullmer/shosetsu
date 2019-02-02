@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-import NavItem from './NavItem';
+import NavItem from '../styled/NavItem';
 
 export default function ProjectListNav() {
   return (

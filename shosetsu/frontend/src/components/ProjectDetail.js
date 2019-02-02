@@ -2,12 +2,57 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 import BookCard from './BookCard';
 import ElementCard from './ElementCard';
 import ProjectDetailToolbar from './ProjectDetailToolbar';
 import ProjectDetailSidebar from './ProjectDetailSidebar';
 import ProjectDetailBreadcrumbs from './breadcrumbs/ProjectDetailBreadcrumbs';
+import Body from './styled/Body';
+import Main from './styled/Main';
+
+const ProjectDetailBody = styled(Body)`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: inherit;
+  grid-template-areas:
+    'title'
+    'main'
+    'sidebar'
+    'toolbar';
+
+  @media (min-width: 768px) {
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: inherit;
+    grid-template-areas:
+      'title toolbar'
+      'main sidebar'
+      'main sidebar';
+  }
+`;
+
+const ProjectDetailContainer = styled(Main)``;
+
+const ProjectBooks = styled.div`
+  display: grid;
+  grid-gap: 10px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+    grid-auto-rows: minmax(250px, auto);
+  }
+`;
+
+const ProjectElements = styled.div`
+  display: grid;
+  grid-gap: 10px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+    grid-auto-rows: minmax(250px, auto);
+  }
+`;
 
 export default class ProjectDetail extends Component {
   static propTypes = {
@@ -50,28 +95,28 @@ export default class ProjectDetail extends Component {
     const loading = Object.keys(project).length === 0;
 
     return (
-      <div className="projectview-body body">
+      <ProjectDetailBody>
         <ProjectDetailBreadcrumbs project={project} rename={this.rename} loading={loading} />
         <ProjectDetailToolbar
           {...this.props}
           project={project}
           deleteProject={this.deleteProject}
         />
-        <main className="projectview-container">
+        <ProjectDetailContainer>
           <NavLink to={`/project/${project.id}/book`}>
             <header>Books</header>
           </NavLink>
-          <div className="project-books">
+          <ProjectBooks>
             {loading ? (
               <p>Loading...</p>
             ) : (
               project.books.map(book => <BookCard book={book} key={book.id} project={project} />)
             )}
-          </div>
+          </ProjectBooks>
           <NavLink to={`/project/${project.id}/element`}>
             <header>Elements</header>
           </NavLink>
-          <div className="project-elements">
+          <ProjectElements>
             {loading ? (
               <p>Loading...</p>
             ) : (
@@ -79,10 +124,10 @@ export default class ProjectDetail extends Component {
                 <ElementCard project={project} element={element} key={element.id} />
               ))
             )}
-          </div>
-        </main>
+          </ProjectElements>
+        </ProjectDetailContainer>
         <ProjectDetailSidebar project={project} />
-      </div>
+      </ProjectDetailBody>
     );
   }
 }

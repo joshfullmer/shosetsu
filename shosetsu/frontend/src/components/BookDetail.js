@@ -1,17 +1,52 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 import ChapterCard from './ChapterCard';
 import BookDetailToolbar from './BookDetailToolbar';
 import BookDetailSidebar from './BookDetailSidebar';
 import BookDetailBreadcrumbs from './breadcrumbs/BookDetailBreadcrumbs';
+import Body from './styled/Body';
+import Main from './styled/Main';
+
+const BookDetailBody = styled(Body)`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: inherit;
+  grid-template-areas:
+    'title'
+    'main'
+    'sidebar'
+    'toolbar';
+
+  @media (min-width: 768px) {
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: inherit;
+    grid-template-areas:
+      'title toolbar'
+      'main sidebar'
+      'main sidebar';
+  }
+`;
+
+const BookDetailContainer = styled(Main)``;
+
+const BookChapters = styled.div`
+  display: grid;
+  grid-gap: 10px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+    grid-auto-rows: minmax(250px, auto);
+  }
+`;
 
 export default class BookDetail extends Component {
   static propTypes = {
     removeBookFromProject: PropTypes.func.isRequired,
-    history: PropTypes.shape.isRequired,
-    match: PropTypes.shape.isRequired
+    history: PropTypes.object.isRequired,
+    match: PropTypes.object.isRequired
   };
 
   state = {
@@ -80,7 +115,7 @@ export default class BookDetail extends Component {
     const { book, project, loading } = this.state;
 
     return (
-      <div className="bookview-body body">
+      <BookDetailBody>
         <BookDetailBreadcrumbs
           project={project}
           book={book}
@@ -93,8 +128,8 @@ export default class BookDetail extends Component {
           book={book}
           deleteBook={this.deleteBook}
         />
-        <main className="bookview-container">
-          <div className="book-chapters">
+        <BookDetailContainer>
+          <BookChapters>
             {loading ? (
               <p>Loading...</p>
             ) : (
@@ -107,11 +142,11 @@ export default class BookDetail extends Component {
                 />
               ))
             )}
-          </div>
-        </main>
+          </BookChapters>
+        </BookDetailContainer>
         {/* TODO: update sidebar to edit description */}
         <BookDetailSidebar book={book} loading={loading} />
-      </div>
+      </BookDetailBody>
     );
   }
 }

@@ -7,14 +7,25 @@ const LogoHeader = styled.header`
   font-family: Kouzan, Arial;
   font-size: 1.5em;
   text-shadow: 2px 2px lightgray;
+  padding: 0.85em;
+
+  grid-area: logo;
+`;
+
+const LogoNavLink = styled(NavLink)`
+  color: black;
+
+  &:visited {
+    color: black;
+  }
 `;
 
 export default function Logo() {
   return (
     <LogoHeader>
-      <NavLink exact to="/">
+      <LogoNavLink exact to="/">
         小説
-      </NavLink>
+      </LogoNavLink>
     </LogoHeader>
   );
 }

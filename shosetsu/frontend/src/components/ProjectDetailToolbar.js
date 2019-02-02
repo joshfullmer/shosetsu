@@ -3,17 +3,18 @@ import PropTypes from 'prop-types';
 
 import AddBookModal from './modals/AddBookModal';
 import AddElementModal from './modals/AddElementModal';
+import Toolbar from './styled/Toolbar';
 
 const ProjectDetailToolbar = (props) => {
   const { deleteProject } = props;
   return (
-    <aside className="toolbar">
+    <Toolbar>
       <AddBookModal buttonClassName="" {...props} />
       <AddElementModal buttonClassName="" {...props} />
       <button type="button" onClick={deleteProject}>
         Delete
       </button>
-    </aside>
+    </Toolbar>
   );
 };
 

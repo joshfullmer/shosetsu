@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Toolbar from './styled/Toolbar';
+
 const ChapterDetailToolbar = (props) => {
   const { deleteChapter } = props;
   return (
-    <aside className="toolbar">
+    <Toolbar>
       <button type="button" onClick={deleteChapter}>
         Delete
       </button>
-    </aside>
+    </Toolbar>
   );
 };
 

@@ -1,10 +1,12 @@
 import React from 'react';
+
 import AddBookModal from './modals/AddBookModal';
+import Toolbar from './styled/Toolbar';
 
 export default function BookListToolbar(props) {
   return (
-    <aside className="toolbar">
+    <Toolbar>
       <AddBookModal {...props} />
-    </aside>
+    </Toolbar>
   );
 }

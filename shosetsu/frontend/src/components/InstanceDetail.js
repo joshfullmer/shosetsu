@@ -1,8 +1,33 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 import InstanceDetailBreadcrumbs from './breadcrumbs/InstanceDetailBreadcrumbs';
+import Body from './styled/Body';
+import Main from './styled/Main';
+
+const InstanceDetailBody = styled(Body)`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: inherit;
+  grid-template-areas:
+    'title'
+    'main';
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: inherit;
+    grid-template-areas:
+      'title'
+      'main'
+      'main';
+  }
+`;
+
+const InstanceDetailContainer = styled(Main)`
+  overflow: auto;
+`;
 
 export default class InstanceDetail extends Component {
   static propTypes = {
@@ -89,7 +114,7 @@ export default class InstanceDetail extends Component {
     } = this.state;
 
     return (
-      <div className="instance-body body">
+      <InstanceDetailBody>
         <InstanceDetailBreadcrumbs
           project={project}
           element={element}
@@ -97,26 +122,26 @@ export default class InstanceDetail extends Component {
           updateInstanceName={this.updateInstanceName}
           loading={loading}
         />
-        <main className="instance-container">
+        <InstanceDetailContainer>
           {loading ? (
             <p>Loading...</p>
           ) : (
             <>
               <p>
-                Name:
+                <span>Name: </span>
                 {instance.name}
               </p>
               {fields.map(field => (
                 <p key={field.label}>
                   {field.label}
-:
+                  <span>: </span>
                   {instance[field.name]}
                 </p>
               ))}
             </>
           )}
-        </main>
-      </div>
+        </InstanceDetailContainer>
+      </InstanceDetailBody>
     );
   }
 }

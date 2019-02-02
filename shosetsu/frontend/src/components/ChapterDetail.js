@@ -1,10 +1,53 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 import ChapterDetailToolbar from './ChapterDetailToolbar';
 import ChapterDetailSidebar from './ChapterDetailSidebar';
 import ChapterDetailBreadcrumbs from './breadcrumbs/ChapterDetailBreadcrumbs';
+import Body from './styled/Body';
+import Main from './styled/Main';
+
+const ChapterDetailBody = styled(Body)`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: inherit;
+  grid-template-areas:
+    'title'
+    'content'
+    'toolbar';
+
+  @media (min-width: 768px) {
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: inherit;
+    grid-template-areas:
+      'title toolbar'
+      'content content'
+      'content content';
+  }
+`;
+
+const ChapterDetailContainer = styled(Main)`
+  padding: 0;
+  overflow: overlay;
+  grid-area: content;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'main'
+    'sidebar';
+
+  @media (min-width: 768px) {
+    grid-template-columns: 3fr 1fr;
+    grid-template-areas: 'main sidebar';
+  }
+`;
+
+const ChapterEditor = styled.div`
+  padding: 0.85em;
+  white-space: pre-line;
+`;
 
 export default class ChapterDetail extends Component {
   static propTypes = {
@@ -92,7 +135,7 @@ export default class ChapterDetail extends Component {
     } = this.state;
 
     return (
-      <div className="chapter-body body">
+      <ChapterDetailBody>
         <ChapterDetailBreadcrumbs
           project={project}
           book={book}
@@ -100,14 +143,14 @@ export default class ChapterDetail extends Component {
           updateChapterTitle={this.updateChapterTitle}
           loading={loading}
         />
-        <div className="chapter-content">
-          <main className="chapter-editor" contentEditable suppressContentEditableWarning>
+        <ChapterDetailContainer>
+          <ChapterEditor contentEditable suppressContentEditableWarning>
             {chapter.content}
-          </main>
+          </ChapterEditor>
           <ChapterDetailSidebar chapter={chapter} />
-        </div>
+        </ChapterDetailContainer>
         <ChapterDetailToolbar deleteChapter={this.deleteChapter} />
-      </div>
+      </ChapterDetailBody>
     );
   }
 }

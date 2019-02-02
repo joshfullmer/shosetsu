@@ -2,10 +2,47 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 import ElementDetailToolbar from './ElementDetailToolbar';
 import ElementDetailBreadcrumbs from './breadcrumbs/ElementDetailBreadcrumbs';
 import InlineEditText from './inline-edit/InlineEditText';
+import Body from './styled/Body';
+import Main from './styled/Main';
+
+const ElementDetailBody = styled(Body)`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: inherit;
+  grid-template-areas:
+    'title'
+    'main'
+    'toolbar';
+
+  @media (min-width: 768px) {
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: inherit;
+    grid-template-areas:
+      'title toolbar'
+      'main main'
+      'main main';
+  }
+`;
+
+const ElementDetailContainer = styled(Main)`
+  overflow: auto;
+`;
+
+const InstanceData = styled.table`
+  border-collapse: collapse;
+
+  td,
+  th {
+    background-color: sandybrown;
+    border: 1px solid white;
+    padding: 8px;
+  }
+`;
 
 export default class ElementDetail extends Component {
   static propTypes = {
@@ -159,7 +196,7 @@ export default class ElementDetail extends Component {
       project, element, fields, instances, loading
     } = this.state;
     return (
-      <div className="element-body body">
+      <ElementDetailBody>
         <ElementDetailBreadcrumbs
           project={project}
           element={element}
@@ -175,11 +212,11 @@ export default class ElementDetail extends Component {
           deleteElement={this.deleteElement}
         />
         {/* TODO: split the table into different components */}
-        <main>
+        <ElementDetailContainer>
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <table className="instance-data">
+            <InstanceData>
               <thead>
                 <tr>
                   <th>X</th>
@@ -217,10 +254,10 @@ export default class ElementDetail extends Component {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </InstanceData>
           )}
-        </main>
-      </div>
+        </ElementDetailContainer>
+      </ElementDetailBody>
     );
   }
 }

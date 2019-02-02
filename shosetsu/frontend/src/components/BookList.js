@@ -1,10 +1,46 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 import BookCard from './BookCard';
 import BookListToolbar from './BookListToolbar';
 import BookListBreadcrumbs from './breadcrumbs/BookListBreadcrumbs';
+import Body from './styled/Body';
+import Main from './styled/Main';
+
+const BookListBody = styled(Body)`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: inherit;
+  grid-template-areas:
+    'title'
+    'main'
+    'toolbar';
+
+  @media (min-width: 768px) {
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: inherit;
+    grid-template-areas:
+      'title toolbar'
+      'main main'
+      'main main';
+  }
+`;
+
+const BookListContainer = styled(Main)`
+  overflow: auto;
+`;
+
+const Books = styled.div`
+  display: grid;
+  grid-gap: 10px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+    grid-auto-rows: minmax(250px, auto);
+  }
+`;
 
 export default class BookList extends Component {
   static propTypes = {
@@ -38,19 +74,19 @@ export default class BookList extends Component {
     const { project, books, loading } = this.state;
 
     return (
-      <div className="booklist-body body">
+      <BookListBody>
         <BookListBreadcrumbs project={project} loading={loading} />
         <BookListToolbar {...this.props} project={project} />
-        <main className="booklist-container">
-          <div className="booklist">
+        <BookListContainer>
+          <Books>
             {loading ? (
               <p>Loading...</p>
             ) : (
               books.map(book => <BookCard book={book} key={book.id} project={project} />)
             )}
-          </div>
-        </main>
-      </div>
+          </Books>
+        </BookListContainer>
+      </BookListBody>
     );
   }
 }

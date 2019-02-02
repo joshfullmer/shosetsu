@@ -3,17 +3,18 @@ import PropTypes from 'prop-types';
 
 import AddFieldModal from './modals/AddFieldModal';
 import AddInstanceModal from './modals/AddInstanceModal';
+import Toolbar from './styled/Toolbar';
 
 const ElementDetailToolbar = (props) => {
   const { deleteElement } = props;
   return (
-    <aside className="toolbar">
+    <Toolbar>
       <AddFieldModal {...props} />
       <AddInstanceModal {...props} />
       <button type="button" onClick={deleteElement}>
         Delete Element
       </button>
-    </aside>
+    </Toolbar>
   );
 };
 

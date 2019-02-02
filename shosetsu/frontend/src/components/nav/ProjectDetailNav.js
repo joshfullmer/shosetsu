@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 
-import NavItem from './NavItem';
+import NavItem from '../styled/NavItem';
 
 export default class ProjectDetailNav extends Component {
   static propTypes = {

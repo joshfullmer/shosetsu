@@ -1,15 +1,20 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+const ProjectCardNavLink = styled(NavLink)`
+  background-color: darkgray;
+`;
 
 const ProjectCard = (props) => {
   const { project } = props;
 
   return (
-    <NavLink to={`/project/${project.id}`} className="project-card">
+    <ProjectCardNavLink to={`/project/${project.id}`}>
       <header>{project.title}</header>
       <p>{project.description}</p>
-    </NavLink>
+    </ProjectCardNavLink>
   );
 };
 

@@ -12,6 +12,10 @@ django-rest-framework = "*"
 drf-nested-routers = "*"
 unicode-slugify = "*"
 django-cors-headers = "*"
+gunicorn = "*"
+"psycopg2" = "*"
+mysqlclient = "*"
+pymysql = "*"
 
 
 [dev-packages]

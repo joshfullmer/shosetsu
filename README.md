@@ -2,7 +2,7 @@
 
 Shosetsu is a web app for the aspiring author. It helps authors get organized with different projects, outlines, characters, places, and more.
 
-Check it out here: [Shosetsu](shosetsu.appspot.com)
+Check it out here: [Shosetsu](https://shosetsu.appspot.com)
 
 ## Technologies implemented
 

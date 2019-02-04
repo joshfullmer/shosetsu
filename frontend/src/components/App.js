@@ -3,7 +3,10 @@ import {
   BrowserRouter, Route, Switch, Redirect
 } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
+import Cookies from 'universal-cookie';
 
+import Login from './Login';
 import Logo from './nav/Logo';
 import ProjectList from './ProjectList';
 import ProjectDetail from './ProjectDetail';
@@ -18,6 +21,8 @@ import ElementDetail from './ElementDetail';
 import NotFound from './NotFound';
 import InstanceDetail from './InstanceDetail';
 import GlobalStyle from './styled/GlobalStyle';
+
+axios.defaults.headers.Authorization = `JWT ${localStorage.getItem('token')}`;
 
 const AppContainer = styled.div`
   > * {
@@ -62,7 +67,65 @@ const Nav = styled.nav`
 
 class App extends Component {
   state = {
-    project: {}
+    project: {},
+    loggedIn: !!localStorage.getItem('token'),
+    username: ''
+  };
+
+  // LOGIN //
+
+  componentDidMount() {
+    const { loggedIn } = this.state;
+    if (loggedIn) {
+      axios
+        .get('/api/user/current/')
+        .then((response) => {
+          this.setState({ username: response.data.username });
+        })
+        .catch((error) => {
+          if (error.response && error.response.status >= 400) {
+            this.handleLogout();
+          }
+        });
+    }
+  }
+
+  handleLogin = (e, data, callback) => {
+    e.preventDefault();
+    axios.post('/api/auth/', data).then((response) => {
+      localStorage.setItem('token', response.data.token);
+      axios.defaults.headers.Authorization = `JWT ${localStorage.getItem('token')}`;
+      this.setState({
+        loggedIn: true,
+        username: response.data.user.username
+      });
+      callback();
+    });
+  };
+
+  handleSignUp = (e, data, callback) => {
+    e.preventDefault();
+    const cookies = new Cookies();
+    const csrftoken = cookies.get('csrftoken');
+    axios
+      .post('/api/user/', data, {
+        headers: {
+          'X-CSRFToken': csrftoken
+        }
+      })
+      .then((response) => {
+        localStorage.setItem('token', response.data.token);
+        this.setState({
+          loggedIn: true,
+          username: response.data.username
+        });
+        callback();
+      });
+  };
+
+  handleLogout = () => {
+    localStorage.removeItem('token');
+    this.setState({ loggedIn: false, username: '' });
   };
 
   // Handle element list in Nav
@@ -132,16 +195,17 @@ class App extends Component {
   };
 
   render() {
-    const { project } = this.state;
+    const { project, loggedIn, username } = this.state;
     return (
       <BrowserRouter>
         <AppContainer>
           <GlobalStyle />
-          <Logo />
+          {!loggedIn && window.location.pathname !== '/login' && <Redirect to="/login" />}
+          <Logo loggedIn={loggedIn} />
 
           {/* Nav */}
           <Nav>
-            <Route path="/" component={ProjectListNav} />
+            <Route path="/project" component={ProjectListNav} />
             <Route
               path="/project/:project_id(\d+)/"
               render={props => (
@@ -153,6 +217,13 @@ class App extends Component {
           {/* Page Body */}
           <Switch>
             <Route exact path="/" component={ProjectList} />
+            <Route
+              exact
+              path="/login"
+              render={props => (
+                <Login {...props} handleLogin={this.handleLogin} handleSignUp={this.handleSignUp} />
+              )}
+            />
             <Route exact path="/project" component={ProjectList} />
             <Route
               exact
@@ -212,7 +283,7 @@ class App extends Component {
             <Redirect from="*" to="/404" />
           </Switch>
 
-          <Footer />
+          <Footer loggedIn={loggedIn} username={username} handleLogout={this.handleLogout} />
         </AppContainer>
       </BrowserRouter>
     );

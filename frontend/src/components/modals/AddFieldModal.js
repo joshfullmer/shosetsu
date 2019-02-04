@@ -3,6 +3,8 @@ import Modal from 'react-modal';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 
+axios.defaults.headers.Authorization = `JWT ${localStorage.getItem('token')}`;
+
 export default class AddFieldModal extends Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
@@ -28,7 +30,7 @@ export default class AddFieldModal extends Component {
       details: ''
     };
     axios
-      .post(`https://shosetsu.appspot.com/api/project/${project.id}/element/${element.id}/field/`, data)
+      .post(`/api/project/${project.id}/element/${element.id}/field/`, data)
       .then((response) => {
         addField(response.data);
       })

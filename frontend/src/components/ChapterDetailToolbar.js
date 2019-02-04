@@ -1,21 +1,21 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import Toolbar from './styled/Toolbar';
 
-const ChapterDetailToolbar = (props) => {
-  const { deleteChapter } = props;
-  return (
-    <Toolbar>
-      <button type="button" onClick={deleteChapter}>
-        Delete
-      </button>
-    </Toolbar>
-  );
-};
+export default class ChapterDetailToolbar extends PureComponent {
+  static propTypes = {
+    deleteChapter: PropTypes.func.isRequired
+  };
 
-ChapterDetailToolbar.propTypes = {
-  deleteChapter: PropTypes.func.isRequired
-};
-
-export default ChapterDetailToolbar;
+  render() {
+    const { deleteChapter } = this.props;
+    return (
+      <Toolbar>
+        <button type="button" onClick={deleteChapter}>
+          Delete
+        </button>
+      </Toolbar>
+    );
+  }
+}

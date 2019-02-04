@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -15,26 +15,26 @@ const Elements = styled.div`
   }
 `;
 
-const InstanceList = (props) => {
-  const { project, element } = props;
+export default class InstanceList extends PureComponent {
+  static propTypes = {
+    project: PropTypes.object.isRequired,
+    element: PropTypes.object.isRequired
+  };
 
-  return (
-    <div>
-      <NavLink to={`/project/${project.id}/element/${element.id}`}>
-        <header>{element.name}</header>
-      </NavLink>
-      <Elements>
-        {element.element_instances.map(instance => (
-          <InstanceCard key={instance.id} instance={instance} {...props} />
-        ))}
-      </Elements>
-    </div>
-  );
-};
+  render() {
+    const { project, element } = this.props;
 
-InstanceList.propTypes = {
-  project: PropTypes.object.isRequired,
-  element: PropTypes.object.isRequired
-};
-
-export default InstanceList;
+    return (
+      <div>
+        <NavLink to={`/project/${project.id}/element/${element.id}`}>
+          <header>{element.name}</header>
+        </NavLink>
+        <Elements>
+          {element.element_instances.map(instance => (
+            <InstanceCard key={instance.id} instance={instance} {...this.props} />
+          ))}
+        </Elements>
+      </div>
+    );
+  }
+}

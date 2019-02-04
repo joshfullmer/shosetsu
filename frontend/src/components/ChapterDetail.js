@@ -9,6 +9,8 @@ import ChapterDetailBreadcrumbs from './breadcrumbs/ChapterDetailBreadcrumbs';
 import Body from './styled/Body';
 import Main from './styled/Main';
 
+axios.defaults.headers.Authorization = `JWT ${localStorage.getItem('token')}`;
+
 const ChapterDetailBody = styled(Body)`
   display: grid;
   grid-template-columns: 1fr;
@@ -69,7 +71,7 @@ export default class ChapterDetail extends Component {
     const { project, book, chapter } = this.state;
     const { history } = this.props;
     axios
-      .get(`https://shosetsu.appspot.com/api/project/${project.id}/book/${book.id}/chapter/${chapter.id}/`)
+      .get(`/api/project/${project.id}/book/${book.id}/chapter/${chapter.id}/`)
       .then((response) => {
         this.setState({
           project: response.data.project,
@@ -94,10 +96,7 @@ export default class ChapterDetail extends Component {
       title
     };
     axios
-      .patch(
-        `https://shosetsu.appspot.com/api/project/${project.id}/book/${book.id}/chapter/${chapter.id}/`,
-        data
-      )
+      .patch(`/api/project/${project.id}/book/${book.id}/chapter/${chapter.id}/`, data)
       .then(() => {
         this.setState(prevState => ({
           chapter: {
@@ -118,9 +117,7 @@ export default class ChapterDetail extends Component {
     const { project, book, chapter } = this.state;
     const { history } = this.props;
     axios
-      .delete(
-        `https://shosetsu.appspot.com/api/project/${project.id}/book/${book.id}/chapter/${chapter.id}/`
-      )
+      .delete(`/api/project/${project.id}/book/${book.id}/chapter/${chapter.id}/`)
       .then(() => {
         history.push(`/project/${project.id}/book/${book.id}/`);
       })

@@ -3,6 +3,8 @@ import axios from 'axios';
 import Modal from 'react-modal';
 import PropTypes from 'prop-types';
 
+axios.defaults.headers.Authorization = `JWT ${localStorage.getItem('token')}`;
+
 export default class AddProjectModal extends Component {
   static propTypes = {
     history: PropTypes.object.isRequired

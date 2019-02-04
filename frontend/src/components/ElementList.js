@@ -9,6 +9,8 @@ import ElementListBreadcrumbs from './breadcrumbs/ElementListBreadcrumbs';
 import Body from './styled/Body';
 import Main from './styled/Main';
 
+axios.defaults.headers.Authorization = `JWT ${localStorage.getItem('token')}`;
+
 const ElementListBody = styled(Body)`
   display: grid;
   grid-template-columns: 1fr;
@@ -49,7 +51,7 @@ export default class ElementList extends Component {
     const { project } = this.state;
     const { history } = this.props;
     axios
-      .get(`https://shosetsu.appspot.com/api/project/${project.id}/element/`)
+      .get(`/api/project/${project.id}/element/`)
       .then((response) => {
         this.setState({
           elements: response.data.elements,

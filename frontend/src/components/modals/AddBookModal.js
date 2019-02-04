@@ -3,6 +3,8 @@ import axios from 'axios';
 import Modal from 'react-modal';
 import PropTypes from 'prop-types';
 
+axios.defaults.headers.Authorization = `JWT ${localStorage.getItem('token')}`;
+
 export default class AddBookModal extends Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
@@ -28,7 +30,7 @@ export default class AddBookModal extends Component {
       description
     };
     axios
-      .post(`https://shosetsu.appspot.com/api/project/${project.id}/book/`, data)
+      .post(`/api/project/${project.id}/book/`, data)
       .then((response) => {
         addBookToProject(response.data);
         history.push(`/project/${project.id}/book/${response.data.id}`);

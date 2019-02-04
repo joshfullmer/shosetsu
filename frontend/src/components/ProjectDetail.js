@@ -12,6 +12,8 @@ import ProjectDetailBreadcrumbs from './breadcrumbs/ProjectDetailBreadcrumbs';
 import Body from './styled/Body';
 import Main from './styled/Main';
 
+axios.defaults.headers.Authorization = `JWT ${localStorage.getItem('token')}`;
+
 const ProjectDetailBody = styled(Body)`
   display: grid;
   grid-template-columns: 1fr;
@@ -69,7 +71,7 @@ export default class ProjectDetail extends Component {
       title
     };
     axios
-      .patch(`https://shosetsu.appspot.com/api/project/${match.params.project_id}/`, data)
+      .patch(`/api/project/${match.params.project_id}/`, data)
       .then(() => {
         renameProject(data.title);
       })
@@ -81,7 +83,7 @@ export default class ProjectDetail extends Component {
   deleteProject = () => {
     const { match, history } = this.props;
     axios
-      .delete(`https://shosetsu.appspot.com/api/project/${match.params.project_id}/`)
+      .delete(`/api/project/${match.params.project_id}/`)
       .then(() => {
         history.push('/project');
       })

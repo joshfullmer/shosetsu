@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const LogoHeader = styled.header`
   background-color: blanchedalmond;
@@ -24,12 +25,19 @@ const LogoNavLink = styled(NavLink)`
   }
 `;
 
-export default function Logo() {
-  return (
-    <LogoHeader>
-      <LogoNavLink exact to="/">
-        小説
-      </LogoNavLink>
-    </LogoHeader>
-  );
+export default class Logo extends PureComponent {
+  static propTypes = {
+    loggedIn: PropTypes.bool.isRequired
+  };
+
+  render() {
+    const { loggedIn } = this.props;
+    return (
+      <LogoHeader>
+        <LogoNavLink exact to={loggedIn ? '/project' : '/login'}>
+          小説
+        </LogoNavLink>
+      </LogoHeader>
+    );
+  }
 }

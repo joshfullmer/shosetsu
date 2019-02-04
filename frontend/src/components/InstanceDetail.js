@@ -7,6 +7,8 @@ import InstanceDetailBreadcrumbs from './breadcrumbs/InstanceDetailBreadcrumbs';
 import Body from './styled/Body';
 import Main from './styled/Main';
 
+axios.defaults.headers.Authorization = `JWT ${localStorage.getItem('token')}`;
+
 const InstanceDetailBody = styled(Body)`
   display: grid;
   grid-template-columns: 1fr;
@@ -51,12 +53,8 @@ export default class InstanceDetail extends Component {
     const { history } = this.props;
     axios
       .all([
-        axios.get(
-          `https://shosetsu.appspot.com/api/project/${project.id}/element/${element.id}/instance/${
-            instance.id
-          }/`
-        ),
-        axios.get(`https://shosetsu.appspot.com/api/project/${project.id}/element/${element.id}/field/`)
+        axios.get(`/api/project/${project.id}/element/${element.id}/instance/${instance.id}/`),
+        axios.get(`/api/project/${project.id}/element/${element.id}/field/`)
       ])
       .then(
         axios.spread((instanceResponse, fields) => {
@@ -86,12 +84,7 @@ export default class InstanceDetail extends Component {
       name
     };
     axios
-      .patch(
-        `https://shosetsu.appspot.com/api/project/${project.id}/element/${element.id}/instance/${
-          instance.id
-        }/`,
-        data
-      )
+      .patch(`/api/project/${project.id}/element/${element.id}/instance/${instance.id}/`, data)
       .then(() => {
         this.setState(prevState => ({
           instance: {

@@ -1,20 +1,20 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import Sidebar from './styled/Sidebar';
 
-const ChapterDetailSidebar = (props) => {
-  const { chapter } = props;
-  return (
-    <Sidebar>
-      <h2>Notes</h2>
-      <p>{chapter.notes}</p>
-    </Sidebar>
-  );
-};
+export default class ChapterDetailSidebar extends PureComponent {
+  static propTypes = {
+    chapter: PropTypes.object.isRequired
+  };
 
-ChapterDetailSidebar.propTypes = {
-  chapter: PropTypes.object.isRequired
-};
-
-export default ChapterDetailSidebar;
+  render() {
+    const { chapter } = this.props;
+    return (
+      <Sidebar>
+        <h2>Notes</h2>
+        <p>{chapter.notes}</p>
+      </Sidebar>
+    );
+  }
+}

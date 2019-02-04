@@ -10,6 +10,8 @@ import InlineEditText from './inline-edit/InlineEditText';
 import Body from './styled/Body';
 import Main from './styled/Main';
 
+axios.defaults.headers.Authorization = `JWT ${localStorage.getItem('token')}`;
+
 const ElementDetailBody = styled(Body)`
   display: grid;
   grid-template-columns: 1fr;
@@ -67,8 +69,8 @@ export default class ElementDetail extends Component {
     const { history } = this.props;
     axios
       .all([
-        axios.get(`https://shosetsu.appspot.com/api/project/${project.id}/element/${element.id}/`),
-        axios.get(`https://shosetsu.appspot.com/api/project/${project.id}/element/${element.id}/instance/`)
+        axios.get(`/api/project/${project.id}/element/${element.id}/`),
+        axios.get(`/api/project/${project.id}/element/${element.id}/instance/`)
       ])
       .then(
         axios.spread((elementResponse, instances) => {
@@ -104,7 +106,7 @@ export default class ElementDetail extends Component {
     const { project, element } = this.state;
     const { history, removeElementFromProject } = this.props;
     axios
-      .delete(`https://shosetsu.appspot.com/api/project/${project.id}/element/${element.id}/`)
+      .delete(`/api/project/${project.id}/element/${element.id}/`)
       .then(() => {
         removeElementFromProject({ id: element.id });
         history.push(`/project/${project.id}/element`);
@@ -122,7 +124,7 @@ export default class ElementDetail extends Component {
       name
     };
     axios
-      .patch(`https://shosetsu.appspot.com/api/project/${project.id}/element/${element.id}/`, data)
+      .patch(`/api/project/${project.id}/element/${element.id}/`, data)
       .then(() => {
         this.setState(
           prevState => ({
@@ -158,7 +160,7 @@ export default class ElementDetail extends Component {
     const { project, element } = this.state;
     axios
       .delete(
-        `https://shosetsu.appspot.com/api/project/${project.id}/element/${element.id}/instance/${
+        `/api/project/${project.id}/element/${element.id}/instance/${
           instanceToDelete.id
         }/`
       )
@@ -183,7 +185,7 @@ export default class ElementDetail extends Component {
       element_field_id,
       value
     };
-    axios.post('https://shosetsu.appspot.com/api/element-value/', data).catch((error) => {
+    axios.post('/api/element-value/', data).catch((error) => {
       if (error.response && error.response.status === 404) {
         history.push('/404');
       }

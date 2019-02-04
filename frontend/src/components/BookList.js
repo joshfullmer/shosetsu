@@ -9,6 +9,8 @@ import BookListBreadcrumbs from './breadcrumbs/BookListBreadcrumbs';
 import Body from './styled/Body';
 import Main from './styled/Main';
 
+axios.defaults.headers.Authorization = `JWT ${localStorage.getItem('token')}`;
+
 const BookListBody = styled(Body)`
   display: grid;
   grid-template-columns: 1fr;
@@ -57,7 +59,7 @@ export default class BookList extends Component {
   componentDidMount() {
     const { project } = this.state;
     axios
-      .get(`https://shosetsu.appspot.com/api/project/${project.id}/book/`)
+      .get(`/api/project/${project.id}/book/`)
       .then((response) => {
         this.setState({
           books: response.data.books,
@@ -72,7 +74,6 @@ export default class BookList extends Component {
 
   render() {
     const { project, books, loading } = this.state;
-
     return (
       <BookListBody>
         <BookListBreadcrumbs project={project} loading={loading} />

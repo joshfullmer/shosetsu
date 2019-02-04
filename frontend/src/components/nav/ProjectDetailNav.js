@@ -5,11 +5,14 @@ import PropTypes from 'prop-types';
 
 import NavItem from '../styled/NavItem';
 
+axios.defaults.headers.Authorization = `JWT ${localStorage.getItem('token')}`;
+
 export default class ProjectDetailNav extends Component {
   static propTypes = {
     match: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
-    setProject: PropTypes.func.isRequired
+    setProject: PropTypes.func.isRequired,
+    project: PropTypes.object.isRequired
   };
 
   state = {
@@ -22,7 +25,7 @@ export default class ProjectDetailNav extends Component {
     const { project } = this.state;
     const { setProject, history } = this.props;
     axios
-      .get(`https://shosetsu.appspot.com/api/project/${project.id}/`)
+      .get(`/api/project/${project.id}/`)
       .then((response) => {
         setProject(response.data);
         this.setState({
@@ -36,6 +39,10 @@ export default class ProjectDetailNav extends Component {
         }
         console.log('Error fetching project data', error);
       });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ project: nextProps.project });
   }
 
   render() {

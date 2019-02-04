@@ -3,6 +3,8 @@ import Modal from 'react-modal';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 
+axios.defaults.headers.Authorization = `JWT ${localStorage.getItem('token')}`;
+
 export default class AddElementModal extends Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
@@ -24,7 +26,7 @@ export default class AddElementModal extends Component {
       project_id: project.id
     };
     axios
-      .post(`https://shosetsu.appspot.com/api/project/${data.project_id}/element/`, data)
+      .post(`/api/project/${data.project_id}/element/`, data)
       .then((response) => {
         addElementToProject(response.data);
         history.push(`/project/${data.project_id}/element/${response.data.id}`);

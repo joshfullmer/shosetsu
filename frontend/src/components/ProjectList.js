@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import Modal from 'react-modal';
 import styled from 'styled-components';
+import axios from 'axios';
 
 import ProjectCard from './ProjectCard';
 import ProjectListToolbar from './ProjectListToolbar';
 import ProjectListBreadcrumbs from './breadcrumbs/ProjectListBreadcrumbs';
 import Body from './styled/Body';
 import Main from './styled/Main';
+
+axios.defaults.headers.Authorization = `JWT ${localStorage.getItem('token')}`;
 
 Modal.setAppElement('#root');
 
